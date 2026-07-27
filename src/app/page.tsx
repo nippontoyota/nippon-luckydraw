@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 
 export default function Home() {
-  // Redirect to a default branch for the entry form.
-  // In a real scenario, users would scan a branch-specific QR code,
-  // taking them directly to /enter/[slug].
-  redirect("/enter/kochi-edappally");
+  // Forms are accessed via QR codes containing specific branch slugs (/enter/[slug]).
+  // The root path should redirect to the admin login.
+  redirect("/admin/login");
 }
