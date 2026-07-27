@@ -58,10 +58,10 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
     
     const result = await submitEntry(data);
     
-    if (result.error) {
-      form.setError("root", { message: result.error });
+    if ("error" in result) {
+      form.setError("root", { message: result.error as string });
       setLoading(false);
-    } else if (result.id) {
+    } else if ("id" in result) {
       // Redirect to confirmation page
       router.push(`/confirmation/${result.id}`);
     }
