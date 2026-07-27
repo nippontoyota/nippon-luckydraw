@@ -69,7 +69,7 @@ export async function submitEntry(data: EntryInput) {
   }
 
   // 3. Rate Limiting Check
-  const rateLimitError = checkRateLimit(ip, phone);
+  const rateLimitError = await checkRateLimit(ip, phone);
   if (rateLimitError) {
     return rateLimitError;
   }
@@ -118,7 +118,7 @@ export async function submitEntry(data: EntryInput) {
         },
       });
 
-      // Queue WhatsApp message
+    // Queue WhatsApp message
       await tx.whatsAppLog.create({
         data: {
           status: "PENDING",
@@ -128,6 +128,14 @@ export async function submitEntry(data: EntryInput) {
 
       return newEntry;
     });
+
+    // Manually trigger the queue processor immediately so free Vercel accounts don't have to wait for the 1-per-day cron job.
+    // We await it so Vercel doesn't kill the background process, though it adds a slight delay to the submission.
+    const CRON_SECRET = process.env.CRON_SECRET || "local_dev_cron_secret";
+    const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    await fetch(`${APP_URL}/api/cron/whatsapp`, {
+      headers: { Authorization: `Bearer ${CRON_SECRET}` },
+    }).catch(e => console.error("Failed to trigger whatsapp cron:", e));
 
     return { id: entry.id };
   } catch (error) {
