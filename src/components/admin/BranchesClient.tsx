@@ -40,7 +40,9 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
   };
 
   const showQrCode = async (branch: Branch) => {
-    const url = `${appUrl}/enter/${branch.slug}`;
+    // Dynamically get the current domain so the QR code ALWAYS points to the active Vercel deployment
+    const origin = typeof window !== "undefined" ? window.location.origin : appUrl;
+    const url = `${origin}/enter/${branch.slug}`;
     try {
       const dataUrl = await QRCode.toDataURL(url, {
         width: 400,
