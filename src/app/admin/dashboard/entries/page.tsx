@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import { DeleteEntryButton } from "@/components/admin/DeleteEntryButton";
 import { ExcludeEntryButton } from "@/components/admin/ExcludeEntryButton";
+import { EntriesSearch } from "@/components/admin/EntriesSearch";
 
 export const dynamic = "force-dynamic";
 
@@ -58,23 +59,7 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
           </a>
         </div>
         
-        <form method="GET" className="flex items-center gap-2 mt-4 max-w-lg">
-          <input 
-            type="text" 
-            name="search"
-            defaultValue={search}
-            placeholder="Search by Ticket ID, Name, Phone, or VIN..."
-            className="flex h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-          />
-          <button type="submit" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2">
-            Search
-          </button>
-          {search && (
-            <a href="/admin/dashboard/entries" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary border border-input bg-white hover:bg-gray-100 hover:text-gray-900 h-9 px-4 py-2">
-              Clear
-            </a>
-          )}
-        </form>
+        <EntriesSearch initialSearch={search} />
       </div>
 
 
