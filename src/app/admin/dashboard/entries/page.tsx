@@ -123,13 +123,13 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
                         <td className="px-5 py-3.5 text-muted-foreground whitespace-nowrap text-xs">
                           {format(entry.createdAt, "MMM d, h:mm a")}
                         </td>
-                        <td className="px-5 py-3.5 font-medium text-gray-900">{entry.name}</td>
-                        <td className="px-5 py-3.5 text-gray-600">{entry.phone}</td>
-                        <td className="px-5 py-3.5 text-gray-600">
+                        <td className="px-5 py-3.5 font-medium text-gray-900 whitespace-nowrap">{entry.name}</td>
+                        <td className="px-5 py-3.5 text-gray-600 whitespace-nowrap">{entry.phone}</td>
+                        <td className="px-5 py-3.5 text-gray-600 whitespace-nowrap">
                           {entry.model.name} <span className="text-gray-400 mx-1">&middot;</span> {entry.colour.name}
                         </td>
-                        <td className="px-5 py-3.5 font-mono text-[11px] text-gray-500">{entry.vin}</td>
-                        <td className="px-5 py-3.5">
+                        <td className="px-5 py-3.5 font-mono text-[11px] text-gray-500 whitespace-nowrap">{entry.vin}</td>
+                        <td className="px-5 py-3.5 whitespace-nowrap">
                           {entry.flag ? (() => {
                             let flags: string[] = [];
                             try {
@@ -151,7 +151,7 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
                             <span className="text-gray-300">-</span>
                           )}
                         </td>
-                        <td className="px-5 py-3.5 text-right">
+                        <td className="px-5 py-3.5 text-right whitespace-nowrap">
                           <div className="flex items-center justify-end gap-2">
                             <ExcludeEntryButton id={entry.id} excluded={entry.excluded} />
                             <div className="opacity-0 group-hover:opacity-100 transition-opacity">
