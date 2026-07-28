@@ -59,6 +59,83 @@ function Field({ label, error, children }: { label: string; error?: string; chil
   )
 }
 
+function SearchableSelect({
+  options,
+  value,
+  onChange,
+  placeholder,
+  hasError,
+  disabled
+}: {
+  options: { id: string; name: string }[];
+  value: string;
+  onChange: (id: string) => void;
+  placeholder: string;
+  hasError: boolean;
+  disabled?: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  
+  const selectedOption = options.find(o => o.id === value);
+  const displayValue = isOpen ? search : (selectedOption?.name || "");
+
+  const filteredOptions = options.filter(o => 
+    o.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="relative">
+      <input
+        type="text"
+        placeholder={placeholder}
+        disabled={disabled}
+        value={displayValue}
+        onFocus={() => {
+          setIsOpen(true);
+          setSearch("");
+        }}
+        onBlur={() => {
+          // Delay closing so click events on options can fire
+          setTimeout(() => setIsOpen(false), 200);
+        }}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          setIsOpen(true);
+          if (value) onChange(""); // clear selection if user types
+        }}
+        className={inputBase(hasError) + (disabled ? ' opacity-50 cursor-not-allowed' : '')}
+      />
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+        <ChevronDown />
+      </div>
+      
+      {isOpen && !disabled && (
+        <div className="absolute z-50 w-full mt-1 bg-white border border-amber-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+          {filteredOptions.length === 0 ? (
+            <div className="px-4 py-3 text-sm text-gray-500">No options found.</div>
+          ) : (
+            filteredOptions.map((opt) => (
+              <div
+                key={opt.id}
+                onMouseDown={(e) => {
+                  e.preventDefault(); // prevents input onBlur from firing immediately
+                  onChange(opt.id);
+                  setSearch("");
+                  setIsOpen(false);
+                }}
+                className={`px-4 py-3 text-sm cursor-pointer hover:bg-amber-50 ${value === opt.id ? 'bg-amber-100 font-bold text-gray-900' : 'text-gray-700'}`}
+              >
+                {opt.name}
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -322,35 +399,28 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
           </Field>
 
           <Field label="Vehicle Model" error={form.formState.errors.modelId?.message}>
-            <div className="relative">
-              <select
-                {...form.register("modelId", {
-                  onChange: () => {
-                    form.setValue("colourId", "");
-                    form.clearErrors("colourId");
-                  }
-                })}
-                className={selectBase(!!form.formState.errors.modelId)}
-              >
-                <option value="">Select Model</option>
-                {models.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
-              </select>
-              <ChevronDown />
-            </div>
+            <SearchableSelect
+              options={models}
+              value={form.watch("modelId")}
+              onChange={(val) => {
+                form.setValue("modelId", val, { shouldValidate: true });
+                form.setValue("colourId", "");
+                form.clearErrors("colourId");
+              }}
+              placeholder="Select Model"
+              hasError={!!form.formState.errors.modelId}
+            />
           </Field>
 
           <Field label="Colour" error={form.formState.errors.colourId?.message}>
-            <div className="relative">
-              <select
-                {...form.register("colourId")}
-                disabled={!selectedModelId}
-                className={selectBase(!!form.formState.errors.colourId) + (!selectedModelId ? ' opacity-50' : '')}
-              >
-                <option value="">Select Colour</option>
-                {availableColours.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-              <ChevronDown />
-            </div>
+            <SearchableSelect
+              options={availableColours}
+              value={form.watch("colourId")}
+              onChange={(val) => form.setValue("colourId", val, { shouldValidate: true })}
+              placeholder="Select Colour"
+              hasError={!!form.formState.errors.colourId}
+              disabled={!selectedModelId}
+            />
           </Field>
 
           <Field label="Vehicle Identification Number (VIN)" error={form.formState.errors.vin?.message}>
@@ -369,27 +439,36 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
             </p>
           </Field>
 
-          <div className="flex items-start gap-3 mt-4 mb-2">
-            <input
-              type="checkbox"
-              id="confirm"
-              {...form.register("confirm")}
-              className="mt-1 w-4 h-4 rounded border-amber-300 text-[#EB0A1E] focus:ring-[#EB0A1E] focus:ring-offset-0 cursor-pointer"
-            />
-            <label htmlFor="confirm" className="text-[12px] font-medium leading-relaxed" style={{ color: '#92400E' }}>
-              I confirm that the information provided above is accurate and complete to the best of my knowledge.
+          <div className="mt-8 mb-6 bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <div className="relative flex items-center justify-center mt-0.5">
+                <input
+                  type="checkbox"
+                  {...form.register("confirm")}
+                  className="peer sr-only"
+                />
+                <div className="w-5 h-5 rounded border-2 border-amber-300 bg-white peer-checked:bg-[#EB0A1E] peer-checked:border-[#EB0A1E] transition-all group-hover:border-amber-400 shadow-sm" />
+                <svg className="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <span className="text-[11px] leading-relaxed font-medium text-gray-700 select-none">
+                I confirm that the details provided are accurate and agree to the 
+                <a href="#" className="text-[#EB0A1E] font-bold mx-1 hover:underline">Terms &amp; Conditions</a> 
+                of the Nippon Toyota Lucky Draw.
+              </span>
             </label>
+            {form.formState.errors.confirm && (
+              <motion.p 
+                initial={{ opacity: 0, y: -5 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                className="text-[11px] font-medium mb-3 flex items-center gap-1" 
+                style={{ color: '#DC2626' }}
+              >
+                <span>⚠</span> {form.formState.errors.confirm.message}
+              </motion.p>
+            )}
           </div>
-          {form.formState.errors.confirm && (
-            <motion.p 
-              initial={{ opacity: 0, y: -5 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              className="text-[11px] font-medium mb-3 flex items-center gap-1" 
-              style={{ color: '#DC2626' }}
-            >
-              <span>⚠</span> {form.formState.errors.confirm.message}
-            </motion.p>
-          )}
 
           {form.formState.errors.root && (
             <motion.p 
