@@ -126,9 +126,15 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }} 
                 transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }} 
-                className="mb-14 relative h-16 w-64"
+                className="mb-14 flex flex-col items-center justify-center gap-3"
               >
-                <Image src="/images/logo_for_customer_facing.png" alt="Nippon Toyota" fill sizes="256px" className="object-contain object-center" priority />
+                <div className="relative h-14 w-14">
+                  <Image src="/images/logo_for_customer_facing.png" alt="Toyota Emblem" fill sizes="56px" className="object-contain object-center" priority />
+                </div>
+                <div className="text-center">
+                  <p className="text-white/60 text-[11px] font-semibold tracking-[0.2em] uppercase">Nippon</p>
+                  <p className="text-white text-[22px] font-black tracking-[0.1em] leading-none">TOYOTA</p>
+                </div>
               </motion.div>
               
               <motion.div 
@@ -189,8 +195,14 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
           className="relative flex items-center justify-between px-5 pb-2"
         >
-          <div className="relative h-10 w-40">
-            <Image src="/images/logo_for_customer_facing.png" alt="Nippon Toyota" fill sizes="160px" className="object-contain object-left" priority />
+          <div className="flex items-center gap-2.5">
+            <div className="relative h-8 w-8">
+              <Image src="/images/logo_for_customer_facing.png" alt="Toyota Emblem" fill sizes="32px" className="object-contain" priority />
+            </div>
+            <div>
+              <p className="text-white/60 text-[9px] font-semibold tracking-[0.2em] uppercase">Nippon</p>
+              <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none">TOYOTA</p>
+            </div>
           </div>
           <div className="pookalam-spin opacity-90 flex-shrink-0 relative" style={{ width: 72, height: 72 }}>
             <Image src="/images/pookalam.png" alt="Onam pookalam" fill sizes="72px" className="object-cover" priority />
