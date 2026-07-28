@@ -65,4 +65,34 @@ export async function deleteBranch(branchId: string) {
     console.error("Failed to delete branch:", error);
     return { error: `Failed to delete branch: ${error?.message || String(error)}` };
   }
+
+export async function deleteBranches(branchIds: string[]) {
+  if (!branchIds || branchIds.length === 0) return { success: true };
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      // 1. Delete all winners for these branches
+      await tx.winner.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
+
+      // 2. Delete all entries for these branches
+      await tx.entry.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
+
+      // 3. Delete the branches themselves
+      await tx.branch.deleteMany({
+        where: { id: { in: branchIds } },
+      });
+    });
+
+    revalidatePath("/admin/dashboard/branches");
+    revalidatePath("/admin/dashboard/entries");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to delete branches:", error);
+    return { error: `Failed to delete branches: ${error?.message || String(error)}` };
+  }
 }
+
