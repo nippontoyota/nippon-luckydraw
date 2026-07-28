@@ -114,7 +114,7 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
                           {entry.model.name} <span className="text-gray-400 mx-1">&middot;</span> {entry.colour.name}
                         </td>
                         <td className="px-5 py-3.5 font-mono text-[11px] text-gray-500 whitespace-nowrap">{entry.vin}</td>
-                        <td className="px-5 py-3.5 whitespace-nowrap">
+                        <td className="px-5 py-3.5">
                           {entry.flag ? (() => {
                             let flags: string[] = [];
                             try {
