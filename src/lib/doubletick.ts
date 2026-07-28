@@ -46,7 +46,8 @@ async function callDoubleTick(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
+      "Accept": "application/json",
+      Authorization: apiKey,
     },
     body: JSON.stringify(body),
     signal: AbortSignal.timeout(10_000), // 10s timeout
