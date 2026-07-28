@@ -220,17 +220,8 @@ export function ConfirmationScreen({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.4 }}
-        className="mx-4 mb-6 flex gap-3 relative z-10"
+        className="mx-4 mb-6 relative z-10"
       >
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.96 }}
-          onClick={() => router.push('/')}
-          className="flex-1 py-3.5 rounded-2xl text-[13px] font-bold transition-colors active:bg-amber-100"
-          style={{ background: 'rgba(255,255,255,0.9)', border: '2px solid #FDE68A', color: '#78350F' }}
-        >
-          ← Home
-        </motion.button>
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.96 }}
@@ -243,7 +234,7 @@ export function ConfirmationScreen({
               })
             }
           }}
-          className="flex-1 py-3.5 rounded-2xl text-[13px] font-extrabold text-white transition-transform"
+          className="w-full py-4 rounded-2xl text-[14px] font-extrabold text-white transition-transform shadow-lg shadow-red-900/20"
           style={{ background: 'linear-gradient(135deg,#B30010,#EB0A1E)' }}
         >
           Share 🎊
