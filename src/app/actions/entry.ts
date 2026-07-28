@@ -19,6 +19,7 @@ export async function submitEntry(data: EntryInput) {
   }
 
   const { name, phone, modelId, colourId, vin, branchId, honeypot } = validated.data;
+  const normalizedPhone = `+91${phone}`; // phone is already stripped of +91 by schema transform
 
   // 2. Honeypot check
   if (honeypot) {
@@ -32,7 +33,7 @@ export async function submitEntry(data: EntryInput) {
       prisma.branch.findUnique({ where: { id: branchId } }),
       prisma.entry.findFirst({
         where: {
-          OR: [{ phone }, { vin }],
+          OR: [{ phone: normalizedPhone }, { vin }],
         },
       }),
     ]);
@@ -42,7 +43,7 @@ export async function submitEntry(data: EntryInput) {
     }
 
     if (existingEntry) {
-      if (existingEntry.phone === phone) {
+      if (existingEntry.phone === normalizedPhone) {
         return { error: "This mobile number has already been registered." };
       }
       if (existingEntry.vin === vin) {
@@ -58,7 +59,7 @@ export async function submitEntry(data: EntryInput) {
       const newEntry = await tx.entry.create({
         data: {
           name,
-          phone,
+          phone: normalizedPhone,
           phoneRaw: phone,
           modelId,
           colourId,
@@ -111,3 +112,22 @@ export async function deleteEntry(id: string) {
     return { error: "Failed to delete entry. It might have related records." };
   }
 }
+
+export async function toggleExclude(entryId: string) {
+  try {
+    const entry = await prisma.entry.findUnique({ where: { id: entryId }, select: { excluded: true } });
+    if (!entry) return { error: "Entry not found" };
+
+    await prisma.entry.update({
+      where: { id: entryId },
+      data: { excluded: !entry.excluded },
+    });
+
+    revalidatePath("/admin/dashboard/entries");
+    return { success: true, excluded: !entry.excluded };
+  } catch (error) {
+    console.error("Failed to toggle exclude:", error);
+    return { error: "Failed to update entry." };
+  }
+}
+

@@ -61,6 +61,7 @@ model Entry {
   userAgent  String?
   flag       String? // MULTI_BRANCH_PHONE, SUSPICIOUS_NAME, etc.
   flagReason String?
+  excluded   Boolean  @default(false)
   createdAt  DateTime @default(now())
   winner     Winner?
 
@@ -68,6 +69,7 @@ model Entry {
   @@index([vin])
   @@index([branchId])
   @@index([branchId, flag]) // For draw.ts query
+  @@index([branchId, excluded]) // For draw eligibility query
   @@index([ip]) // For fraud checks
   @@index([createdAt]) // For rate limit/fraud time filtering
   @@map("entries")

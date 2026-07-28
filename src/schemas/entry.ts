@@ -9,7 +9,8 @@ export const entrySchema = z.object({
     .regex(/^[A-Za-z\s]+$/, "Only letters and spaces allowed"),
   phone: z
     .string()
-    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
+    .transform((val) => val.startsWith("+91") ? val.slice(3) : val)
+    .pipe(z.string().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number")),
   modelId: z.string().min(1, "Select a model"),
   colourId: z.string().min(1, "Select a colour"),
   vin: z

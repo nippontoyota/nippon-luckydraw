@@ -37,7 +37,17 @@ export default async function AdminDashboardPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-xl font-bold">Lucky Winners</CardTitle>
-              <Trophy className="w-5 h-5 text-yellow-500" />
+              <div className="flex items-center gap-2">
+                {winners.length > 0 && (
+                  <a
+                    href="/api/export?type=winners"
+                    className="inline-flex items-center gap-1 h-7 px-2.5 rounded text-xs font-semibold bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 transition-colors"
+                  >
+                    ↓ Export
+                  </a>
+                )}
+                <Trophy className="w-5 h-5 text-yellow-500" />
+              </div>
             </CardHeader>
             <CardContent>
               {winners.length === 0 ? (

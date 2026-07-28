@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Store, FileText } from "lucide-react";
+import { LayoutDashboard, Store, FileText, Palette } from "lucide-react";
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/dashboard/branches", label: "Branches", icon: Store },
   { href: "/admin/dashboard/entries", label: "Entries", icon: FileText },
+  { href: "/admin/dashboard/models", label: "Models & Colours", icon: Palette },
 ];
 
 export function AdminNav() {

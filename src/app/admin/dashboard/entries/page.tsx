@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import { DeleteEntryButton } from "@/components/admin/DeleteEntryButton";
+import { ExcludeEntryButton } from "@/components/admin/ExcludeEntryButton";
 
 export const dynamic = "force-dynamic";
 
@@ -44,8 +45,18 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
   return (
     <div className="space-y-10 pb-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">All Entries</h1>
-        <p className="text-muted-foreground mt-1">View all lucky draw submissions grouped by branch.</p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">All Entries</h1>
+            <p className="text-muted-foreground mt-1">View all lucky draw submissions grouped by branch.</p>
+          </div>
+          <a
+            href="/api/export?type=entries"
+            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition-colors shrink-0"
+          >
+            ↓ Export XLSX
+          </a>
+        </div>
         
         <form method="GET" className="flex items-center gap-2 mt-4 max-w-lg">
           <input 
@@ -65,6 +76,7 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
           )}
         </form>
       </div>
+
 
       {groups.length === 0 && search && (
         <div className="text-center py-16 text-muted-foreground bg-white rounded-xl border border-gray-200 shadow-sm">
@@ -98,12 +110,13 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
                       <th className="px-5 py-3 font-semibold">Vehicle & Colour</th>
                       <th className="px-5 py-3 font-semibold">VIN</th>
                       <th className="px-5 py-3 font-semibold">Flags</th>
+                      <th className="px-5 py-3 font-semibold">Status</th>
                       <th className="px-5 py-3 font-semibold text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {group.entries.map((entry) => (
-                      <tr key={entry.id} className="hover:bg-gray-50/80 transition-colors group">
+                      <tr key={entry.id} className={`hover:bg-gray-50/80 transition-colors group ${entry.excluded ? "opacity-50 bg-gray-50" : ""}`}>
                         <td className="px-5 py-3.5 font-mono text-[11px] font-bold text-amber-700 whitespace-nowrap">
                           {entry.id.slice(0, 8).toUpperCase()}
                         </td>
@@ -117,17 +130,33 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
                         </td>
                         <td className="px-5 py-3.5 font-mono text-[11px] text-gray-500">{entry.vin}</td>
                         <td className="px-5 py-3.5">
-                          {entry.flag ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 uppercase tracking-wide">
-                              {entry.flag}
-                            </span>
-                          ) : (
+                          {entry.flag ? (() => {
+                            let flags: string[] = [];
+                            try {
+                              const parsed = JSON.parse(entry.flag);
+                              flags = Array.isArray(parsed) ? parsed : [String(parsed)];
+                            } catch {
+                              flags = [entry.flag];
+                            }
+                            return (
+                              <div className="flex flex-wrap gap-1">
+                                {flags.map((f) => (
+                                  <span key={f} className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 uppercase tracking-wide">
+                                    {f.replace(/_/g, " ")}
+                                  </span>
+                                ))}
+                              </div>
+                            );
+                          })() : (
                             <span className="text-gray-300">-</span>
                           )}
                         </td>
                         <td className="px-5 py-3.5 text-right">
-                          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                            <DeleteEntryButton id={entry.id} name={entry.name} />
+                          <div className="flex items-center justify-end gap-2">
+                            <ExcludeEntryButton id={entry.id} excluded={entry.excluded} />
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                              <DeleteEntryButton id={entry.id} name={entry.name} />
+                            </div>
                           </div>
                         </td>
                       </tr>
