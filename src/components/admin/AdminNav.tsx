@@ -14,7 +14,7 @@ export function AdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex-1 px-4 py-6 space-y-2">
+    <nav className="flex-1 px-3 py-4 space-y-1">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = pathname === item.href;
@@ -23,13 +23,13 @@ export function AdminNav() {
           <Link 
             key={item.href} 
             href={item.href} 
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium transition-colors ${
+            className={`flex items-center gap-3 px-3 py-2 text-[14px] font-medium rounded-md transition-colors ${
               isActive 
-                ? "bg-primary/10 text-primary" 
-                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                ? "bg-gray-100 text-gray-900" 
+                : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
             }`}
           >
-            <Icon className="w-5 h-5" />
+            <Icon className={`w-[18px] h-[18px] ${isActive ? "text-primary" : "text-gray-400"}`} />
             {item.label}
           </Link>
         );
