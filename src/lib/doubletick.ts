@@ -1,4 +1,4 @@
-const DOUBLETICK_API_URL = "https://public.doubletick.io/whatsapp/message/text";
+const DOUBLETICK_API_URL = "https://public.doubletick.io/whatsapp/message/template";
 const DOUBLETICK_CONFIRM_TEMPLATE = process.env.DOUBLETICK_CONFIRM_TEMPLATE ?? "luckydraw_confirmation";
 
 interface SendResult {
@@ -23,21 +23,23 @@ async function callDoubleTick(
     return { success: true, messageId };
   }
 
-  // Real DoubleTick API call
+  // Real DoubleTick API call based on docs.doubletick.io
   const body = {
-    to: phone,
-    from: process.env.DOUBLETICK_FROM ?? "",
-    type: "template",
-    template: {
-      name: templateName,
-      language: { code: "en" },
-      components: [
-        {
-          type: "body",
-          parameters: Object.values(variables).map((v) => ({ type: "text", text: v })),
+    messages: [
+      {
+        to: phone,
+        from: process.env.DOUBLETICK_FROM ?? "",
+        content: {
+          templateName: templateName,
+          language: "en",
+          templateData: {
+            body: {
+              placeholders: Object.values(variables),
+            },
+          },
         },
-      ],
-    },
+      },
+    ],
   };
 
   const res = await fetch(DOUBLETICK_API_URL, {
