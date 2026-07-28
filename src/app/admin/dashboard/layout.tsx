@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { isAuthenticated, logout } from "@/app/actions/auth";
-import { LogOut, ChevronDown } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 import { AdminNav } from "@/components/admin/AdminNav";
 import { SupabaseRealtime } from "@/components/admin/SupabaseRealtime";
@@ -49,7 +49,6 @@ export default async function AdminDashboardLayout({
           <div className="flex items-center gap-3 cursor-pointer hover:bg-amber-50 py-1.5 px-2 rounded-xl transition-colors -mr-2">
             <div className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold border" style={{ background: 'linear-gradient(135deg,#B30010 0%,#EB0A1E 100%)', color: 'white', borderColor: 'rgba(255,255,255,0.2)' }}>A</div>
             <span className="text-[14px] font-semibold text-[#92400E]">Admin</span>
-            <ChevronDown className="w-4 h-4 text-amber-700/50" />
           </div>
         </header>
         <main className="flex-1 p-6 md:p-8 overflow-auto">
