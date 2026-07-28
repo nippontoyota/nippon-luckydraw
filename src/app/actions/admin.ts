@@ -28,10 +28,11 @@ export async function createBranch(formData: FormData) {
 
     revalidatePath("/admin/dashboard/branches");
     return { success: true };
-  } catch (error: unknown) {
-    if (error instanceof Error && "code" in error && (error as Record<string, unknown>).code === "P2002") {
-      return { error: "A branch with this name/slug already exists." };
+  } catch (error: any) {
+    if (error?.code === "P2002") {
+      const target = error?.meta?.target;
+      return { error: `A branch with this name/slug already exists. (Target: ${JSON.stringify(target)} | Generated slug: ${slug})` };
     }
-    return { error: "Failed to create branch." };
+    return { error: `Failed to create branch: ${error?.message || String(error)}` };
   }
 }

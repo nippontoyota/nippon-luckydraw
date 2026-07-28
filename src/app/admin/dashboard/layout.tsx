@@ -3,6 +3,7 @@ import { isAuthenticated, logout } from "@/app/actions/auth";
 import { LogOut, ChevronDown } from "lucide-react";
 
 import { AdminNav } from "@/components/admin/AdminNav";
+import { AutoRefresh } from "@/components/admin/AutoRefresh";
 
 export default async function AdminDashboardLayout({
   children,
@@ -16,6 +17,7 @@ export default async function AdminDashboardLayout({
 
   return (
     <div className="min-h-screen flex text-gray-900 font-sans" style={{ background: '#FDF9F1' }}>
+      <AutoRefresh interval={5000} />
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-amber-200/50 flex-col hidden md:flex relative overflow-hidden shadow-[4px_0_24px_rgba(212,147,10,0.05)]">
         <div className="h-16 flex items-center px-6 border-b border-amber-100 bg-amber-50/40">
