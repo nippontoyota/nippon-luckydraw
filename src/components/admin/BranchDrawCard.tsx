@@ -31,6 +31,8 @@ export function BranchDrawCard({ branch, winners }: BranchDrawCardProps) {
   const [success, setSuccess] = useState(false);
   const [showConfirmRedraw, setShowConfirmRedraw] = useState(false);
 
+  const [selectedWinner, setSelectedWinner] = useState<WinnerWithDetails | null>(null);
+
   const hasWinners = winners.length > 0;
 
   const handleDraw = async (forceRerun = false) => {
@@ -116,7 +118,11 @@ export function BranchDrawCard({ branch, winners }: BranchDrawCardProps) {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {winners.map((winner) => (
-                    <tr key={winner.id} className="hover:bg-gray-50/50 transition-colors">
+                    <tr 
+                      key={winner.id} 
+                      className="hover:bg-gray-50 transition-colors cursor-pointer"
+                      onClick={() => setSelectedWinner(winner)}
+                    >
                       <td className="px-4 py-3">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${
                           winner.place === 1 ? "bg-yellow-100 text-yellow-800 border border-yellow-200/50" :
@@ -127,12 +133,12 @@ export function BranchDrawCard({ branch, winners }: BranchDrawCardProps) {
                         </span>
                       </td>
                       <td className="px-4 py-3 font-semibold text-gray-900">{winner.entry.name}</td>
-                      <td className="px-4 py-3 text-muted-foreground">******{winner.entry.phone.slice(-4)}</td>
+                      <td className="px-4 py-3 text-gray-700">{winner.entry.phone}</td>
                       <td className="px-4 py-3 text-muted-foreground">
                         {winner.entry.model.name} <span className="text-gray-400">({winner.entry.colour.name})</span>
                       </td>
-                      <td className="px-4 py-3 text-xs font-mono text-gray-500 text-right">
-                        ***{winner.entry.vin.slice(-4)}
+                      <td className="px-4 py-3 text-xs font-mono text-gray-600 text-right">
+                        {winner.entry.vin}
                       </td>
                     </tr>
                   ))}
@@ -186,6 +192,66 @@ export function BranchDrawCard({ branch, winners }: BranchDrawCardProps) {
           </div>
         )}
       </CardContent>
+
+      {/* Winner Details Modal */}
+      {selectedWinner && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setSelectedWinner(null)}>
+          <div 
+            className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <h3 className="text-lg font-bold text-gray-900">Winner Details</h3>
+              <button 
+                onClick={() => setSelectedWinner(null)}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-md hover:bg-gray-100"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div className="flex items-center gap-3 mb-6">
+                <span className={`inline-flex items-center justify-center w-12 h-12 rounded-full text-lg font-black shadow-sm ${
+                  selectedWinner.place === 1 ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-200" :
+                  selectedWinner.place === 2 ? "bg-gray-100 text-gray-800 border-2 border-gray-200" :
+                  "bg-orange-100 text-orange-800 border-2 border-orange-200"
+                }`}>
+                  {selectedWinner.place}
+                </span>
+                <div>
+                  <h4 className="text-xl font-bold text-gray-900">{selectedWinner.entry.name}</h4>
+                  <p className="text-sm text-gray-500">{branch.name} Branch</p>
+                </div>
+              </div>
+
+              <div className="space-y-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                <div className="grid grid-cols-3 gap-2 text-sm">
+                  <span className="text-gray-500 font-medium">Phone:</span>
+                  <span className="col-span-2 font-semibold text-gray-900">{selectedWinner.entry.phone}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-sm">
+                  <span className="text-gray-500 font-medium">Vehicle:</span>
+                  <span className="col-span-2 font-semibold text-gray-900">{selectedWinner.entry.model.name}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-sm">
+                  <span className="text-gray-500 font-medium">Colour:</span>
+                  <span className="col-span-2 font-semibold text-gray-900">{selectedWinner.entry.colour.name}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-sm">
+                  <span className="text-gray-500 font-medium">VIN:</span>
+                  <span className="col-span-2 font-mono font-semibold text-gray-900">{selectedWinner.entry.vin}</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end">
+              <Button variant="outline" onClick={() => setSelectedWinner(null)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }
