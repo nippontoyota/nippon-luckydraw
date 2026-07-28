@@ -1,5 +1,4 @@
 const DOUBLETICK_API_URL = "https://public.doubletick.io/whatsapp/message/text";
-const DOUBLETICK_WINNER_TEMPLATE = process.env.DOUBLETICK_WINNER_TEMPLATE ?? "luckydraw_winner";
 const DOUBLETICK_CONFIRM_TEMPLATE = process.env.DOUBLETICK_CONFIRM_TEMPLATE ?? "luckydraw_confirmation";
 
 interface SendResult {
@@ -69,20 +68,6 @@ export async function sendWhatsAppMessage(
   variables: Record<string, string>
 ): Promise<SendResult> {
   return callDoubleTick(phone, templateName, variables);
-}
-
-/**
- * Send winner congratulations message
- */
-export async function sendWinnerNotification(
-  phone: string,
-  vars: { name: string; place: string; branchName: string }
-): Promise<SendResult> {
-  return callDoubleTick(phone, DOUBLETICK_WINNER_TEMPLATE, {
-    name: vars.name,
-    place: vars.place,
-    branchName: vars.branchName,
-  });
 }
 
 export { DOUBLETICK_CONFIRM_TEMPLATE };
