@@ -71,12 +71,8 @@ export function ConfirmationScreen({
       >
         <div className="h-9" />
         <div className="relative flex items-center justify-between px-5 pb-4">
-          <div className="flex items-center gap-2.5">
-            <ToyotaEmblem size={38} white />
-            <div>
-              <p className="text-white/60 text-[9px] font-semibold tracking-[0.2em] uppercase">Nippon</p>
-              <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none">TOYOTA</p>
-            </div>
+          <div className="relative h-10 w-40">
+            <Image src="/images/logo_for_customer_facing.png" alt="Nippon Toyota" fill sizes="160px" className="object-contain object-left" priority />
           </div>
           <div className="pookalam-spin opacity-90 flex-shrink-0 relative" style={{ width: 64, height: 64 }}>
             <Image src="/images/pookalam.png" alt="Onam pookalam" fill sizes="64px" className="object-cover" priority />
