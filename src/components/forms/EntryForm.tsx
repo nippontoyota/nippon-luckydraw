@@ -72,6 +72,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
       colourId: "",
       vin: "",
       branchId,
+      confirm: false as unknown as true,
       honeypot: "",
     },
   });
@@ -367,6 +368,28 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
               Found on your vehicle invoice or registration certificate.
             </p>
           </Field>
+
+          <div className="flex items-start gap-3 mt-4 mb-2">
+            <input
+              type="checkbox"
+              id="confirm"
+              {...form.register("confirm")}
+              className="mt-1 w-4 h-4 rounded border-amber-300 text-[#EB0A1E] focus:ring-[#EB0A1E] focus:ring-offset-0 cursor-pointer"
+            />
+            <label htmlFor="confirm" className="text-[12px] font-medium leading-relaxed" style={{ color: '#92400E' }}>
+              I confirm that the information provided above is accurate and complete to the best of my knowledge.
+            </label>
+          </div>
+          {form.formState.errors.confirm && (
+            <motion.p 
+              initial={{ opacity: 0, y: -5 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="text-[11px] font-medium mb-3 flex items-center gap-1" 
+              style={{ color: '#DC2626' }}
+            >
+              <span>⚠</span> {form.formState.errors.confirm.message}
+            </motion.p>
+          )}
 
           {form.formState.errors.root && (
             <motion.p 
