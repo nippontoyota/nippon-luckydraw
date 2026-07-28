@@ -13,7 +13,6 @@ import {
   NilavilakkuLamp,
   Sparkle,
   PetalRain,
-  LotusLoader,
 } from "./FestiveElements";
 
 interface ModelWithColours {
@@ -94,9 +93,12 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
       <PetalRain />
 
       {/* Loading Overlay */}
-      {loading && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center slide-up" style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}>
-          <PetalRain />
+      {isSubmitting && (
+        <div className="fixed inset-0 z-[100] h-[100dvh] w-screen flex flex-col items-center justify-center p-6 text-white overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #1A0005 0%, #B30010 40%, #EB0A1E 100%)' }}
+        >
+          {/* Petal Rain Background */}
+          <PetalRain count={25} />
           {[
             { top: '10%', left: '10%', size: 10, color: '#FFD700', delay: '0s' },
             { top: '20%', left: '80%', size: 8, color: '#FFA000', delay: '0.6s' },
@@ -114,8 +116,8 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
               <ToyotaEmblem size={64} white />
             </div>
             
-            <div className="mb-14 relative slide-up" style={{ animationDelay: '0.15s' }}>
-              <LotusLoader size={160} />
+            <div className="mb-14 relative slide-up pookalam-spin shadow-2xl" style={{ animationDelay: '0.15s', width: 160, height: 160, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(255,215,0,0.3)' }}>
+              <Image src="/images/pookalam-generated.png" alt="Loading" fill sizes="160px" className="object-cover" priority />
             </div>
             
             <h2 className="text-white text-[22px] font-black tracking-widest uppercase mb-2 slide-up" style={{ animationDelay: '0.2s' }}>Processing</h2>
