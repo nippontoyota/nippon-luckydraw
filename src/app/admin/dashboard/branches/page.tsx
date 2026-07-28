@@ -6,6 +6,11 @@ export const dynamic = "force-dynamic";
 export default async function BranchesPage() {
   const branches = await prisma.branch.findMany({
     orderBy: { name: "asc" },
+    include: {
+      _count: {
+        select: { entries: true },
+      },
+    },
   });
 
   // Get the base URL from env or request headers for QR codes

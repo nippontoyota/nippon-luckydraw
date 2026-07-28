@@ -36,3 +36,33 @@ export async function createBranch(formData: FormData) {
     return { error: `Failed to create branch: ${error?.message || String(error)}` };
   }
 }
+
+export async function deleteBranch(branchId: string) {
+  try {
+    // Delete in a transaction to handle foreign key constraints safely
+    await prisma.$transaction(async (tx) => {
+      // 1. Delete all winners for this branch
+      await tx.winner.deleteMany({
+        where: { branchId },
+      });
+
+      // 2. Delete all entries for this branch
+      await tx.entry.deleteMany({
+        where: { branchId },
+      });
+
+      // 3. Delete the branch itself
+      await tx.branch.delete({
+        where: { id: branchId },
+      });
+    });
+
+    revalidatePath("/admin/dashboard/branches");
+    // Also revalidate entries page since we just deleted entries
+    revalidatePath("/admin/dashboard/entries");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to delete branch:", error);
+    return { error: `Failed to delete branch: ${error?.message || String(error)}` };
+  }
+}
