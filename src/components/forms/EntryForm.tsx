@@ -211,7 +211,10 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
             <div className="relative">
               <select
                 {...form.register("modelId", {
-                  onChange: () => form.setValue("colourId", "", { shouldValidate: true })
+                  onChange: () => {
+                    form.setValue("colourId", "");
+                    form.clearErrors("colourId");
+                  }
                 })}
                 className={selectBase(!!form.formState.errors.modelId)}
               >
