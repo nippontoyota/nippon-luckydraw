@@ -23,7 +23,7 @@ interface ModelWithColours {
 }
 
 interface EntryFormProps {
-  slug: string;
+  branchId: string;
   branchName: string;
   models: ModelWithColours[];
 }
@@ -59,7 +59,7 @@ function Field({ label, error, children }: { label: string; error?: string; chil
   )
 }
 
-export function EntryForm({ slug, branchName, models }: EntryFormProps) {
+export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -71,7 +71,7 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
       modelId: "",
       colourId: "",
       vin: "",
-      slug,
+      branchId,
       honeypot: "",
     },
   });

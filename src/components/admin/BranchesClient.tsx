@@ -84,7 +84,7 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
 
   const showQrCode = async (branch: Branch) => {
     const origin = typeof window !== "undefined" ? window.location.origin : appUrl;
-    const url = `${origin}/enter/${branch.slug}`;
+    const url = `${origin}/enter/${branch.id}`;
     try {
       const dataUrl = await QRCode.toDataURL(url, {
         width: 400,
@@ -159,7 +159,7 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
                         </div>
                         <div className="flex items-center gap-1.5">
                           <LinkIcon size={14} className="text-amber-500" />
-                          <span className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">/{branch.slug}</span>
+                          <span className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">/{branch.id}</span>
                         </div>
                       </div>
                     </div>

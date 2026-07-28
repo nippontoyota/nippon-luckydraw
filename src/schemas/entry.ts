@@ -16,7 +16,7 @@ export const entrySchema = z.object({
     .string()
     .length(17, "VIN must be exactly 17 characters")
     .regex(VIN_CHARSET, "VIN contains invalid characters"),
-  slug: z.string(),
+  branchId: z.string(),
   honeypot: z.string().max(0), // Hidden field, must be empty
 });
 

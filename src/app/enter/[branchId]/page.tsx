@@ -6,7 +6,7 @@ export const revalidate = 60; // Cache this page for 60 seconds (ISR)
 
 export default async function EnterPage(
   props: {
-    params: Promise<{ slug: string }>
+    params: Promise<{ branchId: string }>
   }
 ) {
   const params = await props.params;
@@ -14,7 +14,7 @@ export default async function EnterPage(
   // Parallelize DB queries
   const [branch, modelsData] = await Promise.all([
     prisma.branch.findUnique({
-      where: { slug: params.slug },
+      where: { id: params.branchId },
     }),
     prisma.model.findMany({
       include: {
@@ -38,7 +38,7 @@ export default async function EnterPage(
 
   return (
     <main className="min-h-screen bg-[#fbf9f8]">
-      <EntryForm slug={params.slug} branchName={branch.name} models={models} />
+      <EntryForm branchId={branch.id} branchName={branch.name} models={models} />
     </main>
   );
 }

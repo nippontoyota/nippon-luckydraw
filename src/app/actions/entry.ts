@@ -18,7 +18,7 @@ export async function submitEntry(data: EntryInput) {
     return { error: "Invalid data provided." };
   }
 
-  const { name, phone, modelId, colourId, vin, slug, honeypot } = validated.data;
+  const { name, phone, modelId, colourId, vin, branchId, honeypot } = validated.data;
 
   // 2. Honeypot check
   if (honeypot) {
@@ -29,7 +29,7 @@ export async function submitEntry(data: EntryInput) {
   try {
     // 4 & 5. Global Uniqueness & Branch Lookup (Parallel)
     const [branch, existingEntry] = await Promise.all([
-      prisma.branch.findUnique({ where: { slug } }),
+      prisma.branch.findUnique({ where: { id: branchId } }),
       prisma.entry.findFirst({
         where: {
           OR: [{ phone }, { vin }],
