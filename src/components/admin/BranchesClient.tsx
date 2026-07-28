@@ -253,12 +253,14 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+            onClick={() => setQrModal({ ...qrModal, isOpen: false })}
           >
             <motion.div 
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border border-white/20"
+              onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6 text-center pb-0">
                 <h3 className="text-2xl font-black text-gray-900 tracking-tight">{qrModal.branchName}</h3>
@@ -310,12 +312,19 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/40 backdrop-blur-sm"
+            onClick={() => {
+              if (!deletingId) {
+                setDeleteModal({ isOpen: false, branch: null });
+                setDeleteConfirmText("");
+              }
+            }}
           >
             <motion.div 
               initial={{ scale: 0.95, opacity: 0, y: 10 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 10 }}
               className="bg-white rounded-2xl w-full max-w-md shadow-2xl border border-red-100 overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6">
                 <div className="flex items-center gap-3 mb-4">
