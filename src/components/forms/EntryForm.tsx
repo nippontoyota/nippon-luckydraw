@@ -72,7 +72,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
       colourId: "",
       vin: "",
       branchId,
-      confirm: false as unknown as true,
+      confirm: false,
       honeypot: "",
     },
   });
