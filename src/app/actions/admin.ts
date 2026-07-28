@@ -28,8 +28,8 @@ export async function createBranch(formData: FormData) {
 
     revalidatePath("/admin/dashboard/branches");
     return { success: true };
-  } catch (error: any) {
-    if (error.code === "P2002") {
+  } catch (error: unknown) {
+    if (error instanceof Error && "code" in error && (error as Record<string, unknown>).code === "P2002") {
       return { error: "A branch with this name/slug already exists." };
     }
     return { error: "Failed to create branch." };

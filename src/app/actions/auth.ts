@@ -5,7 +5,7 @@ import { encrypt, decrypt } from "@/lib/session";
 
 import { redirect } from "next/navigation";
 
-export async function login(prevState: any, formData: FormData) {
+export async function login(prevState: Record<string, unknown> | null, formData: FormData) {
   // Check environment variables securely without falling back
   if (!process.env.ADMIN_PASSWORD) {
     throw new Error("CRITICAL: ADMIN_PASSWORD environment variable is not set.");

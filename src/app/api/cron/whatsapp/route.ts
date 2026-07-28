@@ -56,7 +56,7 @@ export async function GET(request: Request) {
           confirmationUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/confirmation/${entry.id}`,
         };
 
-        const result = await sendWhatsAppMessage(entry.phone, "luckydraw_confirmation", variables);
+        await sendWhatsAppMessage(entry.phone, "luckydraw_confirmation", variables);
 
         // Update log on success
         await prisma.whatsAppLog.update({
@@ -68,13 +68,13 @@ export async function GET(request: Request) {
         });
         
         successCount++;
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Update log on failure and increment retries
         await prisma.whatsAppLog.update({
           where: { id: log.id },
           data: {
             status: "FAILED",
-            error: error.message || "Unknown error",
+            error: error instanceof Error ? error.message : "Unknown error",
             retries: { increment: 1 },
           },
         });

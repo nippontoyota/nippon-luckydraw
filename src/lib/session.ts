@@ -1,6 +1,5 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
 
 function getEncodedKey() {
   if (!process.env.SESSION_SECRET) {
@@ -9,7 +8,7 @@ function getEncodedKey() {
   return new TextEncoder().encode(process.env.SESSION_SECRET);
 }
 
-export async function encrypt(payload: any) {
+export async function encrypt(payload: Record<string, unknown>) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -23,7 +22,7 @@ export async function decrypt(session: string | undefined = "") {
       algorithms: ["HS256"],
     });
     return payload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

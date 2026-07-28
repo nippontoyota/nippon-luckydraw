@@ -6,17 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { entrySchema, type EntryInput } from "@/schemas/entry";
 import { submitEntry } from "@/app/actions/entry";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+  ToyotaEmblem,
+  ChevronDown,
+  NilavilakkuLamp,
+  Sparkle,
+  PetalRain,
+} from "./FestiveElements";
 
 interface ModelWithColours {
   id: string;
@@ -30,8 +26,35 @@ interface EntryFormProps {
   models: ModelWithColours[];
 }
 
+const inputBase = (hasError: boolean) =>
+  `w-full px-4 py-3.5 rounded-2xl text-[14px] font-medium border-2 transition-all bg-white outline-none ` +
+  (hasError
+    ? 'border-red-400'
+    : 'border-amber-200 focus:border-[#EB0A1E] focus:shadow-[0_0_0_3px_rgba(235,10,30,0.12)]')
+
+const selectBase = (hasError: boolean) =>
+  inputBase(hasError) + ' appearance-none cursor-pointer ' +
+  (hasError ? 'text-red-700' : 'text-gray-800')
+
+function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-4">
+      <label className="block text-[11px] font-bold mb-1.5 tracking-[0.12em] uppercase" style={{ color: '#92400E' }}>
+        {label}
+      </label>
+      {children}
+      {error && (
+        <p className="text-[11px] font-medium mt-1.5 flex items-center gap-1" style={{ color: '#DC2626' }}>
+          <span>⚠</span> {error}
+        </p>
+      )}
+    </div>
+  )
+}
+
 export function EntryForm({ slug, branchName, models }: EntryFormProps) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<EntryInput>({
     resolver: zodResolver(entrySchema),
@@ -45,8 +68,6 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
       honeypot: "",
     },
   });
-
-  const router = useRouter();
 
   const selectedModelId = form.watch("modelId");
   const selectedModel = models.find((m) => m.id === selectedModelId);
@@ -62,191 +83,202 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
       form.setError("root", { message: result.error as string });
       setLoading(false);
     } else if ("id" in result) {
-      // Redirect to confirmation page
       router.push(`/confirmation/${result.id}`);
     }
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto border-t-4 border-t-primary shadow-xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur">
-      <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50 border-b border-border/50 pb-6 text-center">
-        <CardTitle className="text-xl font-bold text-foreground">
-          {branchName} Branch
-        </CardTitle>
-        <p className="text-sm text-muted-foreground mt-1">
-          Complete the form below to enter the Onam lucky draw!
-        </p>
-      </CardHeader>
+    <div className="flex flex-col min-h-screen relative font-sans w-full max-w-[420px] mx-auto shadow-2xl overflow-hidden" style={{ background: 'linear-gradient(180deg,#FFF8E1 0%,#FFF3CD 60%,#FFECB3 100%)' }}>
+      <PetalRain />
 
-      <CardContent className="pt-6 pb-8 px-6 md:px-8">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Honeypot field for spam prevention */}
-          <input
-            type="text"
-            {...form.register("honeypot")}
-            className="absolute -left-[9999px] opacity-0 pointer-events-none"
-            tabIndex={-1}
-            autoComplete="off"
-            aria-hidden="true"
-          />
+      {/* ── Header ── */}
+      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}>
+        {[
+          { top: 14, left: 18,  size: 10, color: '#FFD700', delay: '0s'   },
+          { top: 28, left: 340, size: 8,  color: '#FFA000', delay: '0.6s' },
+          { top: 60, left: 22,  size: 7,  color: '#FFD700', delay: '1.1s' },
+          { top: 72, left: 355, size: 9,  color: '#FF8F00', delay: '0.3s' },
+          { top: 44, left: 295, size: 6,  color: '#FFD700', delay: '1.8s' },
+        ].map((s, i) => (
+          <div key={i} className="absolute twinkle" style={{ top: s.top, left: s.left, animationDuration: `${1.6 + i * 0.4}s`, animationDelay: s.delay }}>
+            <Sparkle size={s.size} color={s.color} />
+          </div>
+        ))}
+        <div className="h-9" />
+        <div className="relative flex items-center justify-between px-5 pb-2">
+          <div className="flex items-center gap-2.5">
+            <ToyotaEmblem size={38} white />
+            <div>
+              <p className="text-white/60 text-[9px] font-semibold tracking-[0.2em] uppercase">Nippon</p>
+              <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none">TOYOTA</p>
+            </div>
+          </div>
+          <div className="pookalam-spin opacity-90" style={{ width: 72, height: 72 }}>
+            <img src="/images/pookalam.png" alt="Onam pookalam" className="w-full h-full object-cover rounded-full" />
+          </div>
+        </div>
+        <div className="relative mx-4 mt-2 rounded-2xl overflow-hidden" style={{ height: 110 }}>
+          <img src="/images/onam-boat.png" alt="Happy Onam snake boat race" className="w-full h-full object-cover object-center" />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg,rgba(26,0,5,0.45) 0%,rgba(0,0,0,0) 60%)' }} />
+          <div className="absolute left-4 top-1/2 -translate-y-1/2">
+            <p className="text-white/80 text-[9px] font-semibold tracking-[0.2em] uppercase">Festival Offer</p>
+            <p className="text-white text-[18px] font-black leading-tight">Lucky Draw</p>
+            <p className="text-[10px] font-semibold mt-0.5 shimmer-gold">Win Exclusive Prizes!</p>
+          </div>
+        </div>
+        <div className="px-5 pt-4 pb-2 flex items-end gap-3">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="h-px flex-1" style={{ background: 'rgba(255,215,0,0.35)' }} />
+              <p className="text-[10px] font-bold tracking-[0.22em] uppercase" style={{ color: '#FFD700' }}>Onam Festival 2025</p>
+              <div className="h-px flex-1" style={{ background: 'rgba(255,215,0,0.35)' }} />
+            </div>
+            <h1 className="text-white text-[22px] font-black leading-tight">
+              Enter &amp; Win<br />
+              <span className="shimmer-gold" style={{ fontSize: 26 }}>Amazing Prizes!</span>
+            </h1>
+            <p className="text-white/65 text-[11px] mt-1.5 font-normal leading-relaxed">
+              Fill in your vehicle details for a chance to win.
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-2 pb-1">
+            <NilavilakkuLamp size={28} />
+            <NilavilakkuLamp size={28} />
+          </div>
+        </div>
+        <svg viewBox="0 0 390 22" className="w-full block" style={{ marginBottom: -1 }}>
+          <path d="M0,22 C65,4 130,20 195,10 C260,0 325,18 390,6 L390,22 Z" fill="#FFF8E1" />
+        </svg>
+      </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-foreground font-semibold">
-              Full Name
-            </Label>
-            <Input
-              id="name"
-              placeholder="e.g. John Doe"
-              {...form.register("name")}
-              className={`h-12 bg-gray-50 border-gray-200 focus-visible:ring-primary ${
-                form.formState.errors.name ? "border-destructive" : ""
-              }`}
-            />
-            {form.formState.errors.name && (
-              <p className="text-sm text-destructive font-medium">
-                {form.formState.errors.name.message}
-              </p>
-            )}
+      {/* ── Form card ── */}
+      <div className="relative z-10 mx-4 mt-3 mb-8 rounded-3xl overflow-visible">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="rounded-3xl p-5 shadow-xl"
+          style={{
+            background: 'rgba(255,255,255,0.97)',
+            border: '1.5px solid rgba(245,166,35,0.3)',
+            boxShadow: '0 8px 40px rgba(212,147,10,0.18), 0 2px 8px rgba(0,0,0,0.08)',
+          }}
+        >
+          <input type="text" {...form.register("honeypot")} className="absolute -left-[9999px] opacity-0 pointer-events-none" tabIndex={-1} aria-hidden="true" />
+          
+          <div className="flex items-center gap-2.5 mb-5 pb-4" style={{ borderBottom: '1px solid #FDE68A' }}>
+            <div className="w-1 h-8 rounded-full" style={{ background: 'linear-gradient(180deg,#EB0A1E,#FF6B35)' }} />
+            <div>
+              <p className="text-[13px] font-extrabold text-gray-800">Registration Form</p>
+              <p className="text-[11px] font-normal" style={{ color: '#92400E' }}>{branchName} Branch • Onam 2025</p>
+            </div>
+            <div className="ml-auto flex gap-1">
+              {[0, 1, 2].map(i => (
+                <div key={i} className="w-2 h-2 rounded-full" style={{ background: i === 0 ? '#EB0A1E' : '#FDE68A', opacity: i === 0 ? 1 : 0.6 }} />
+              ))}
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="phone" className="text-foreground font-semibold">
-              Mobile Number
-            </Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium text-sm">
-                +91
-              </span>
-              <Input
-                id="phone"
+          <Field label="Full Name" error={form.formState.errors.name?.message}>
+            <input
+              type="text"
+              placeholder="e.g. Priya Menon"
+              {...form.register("name")}
+              className={inputBase(!!form.formState.errors.name)}
+            />
+          </Field>
+
+          <Field label="Mobile Number" error={form.formState.errors.phone?.message}>
+            <div className="flex gap-2">
+              <div
+                className="flex items-center gap-1.5 px-3.5 rounded-2xl border-2 border-amber-200 bg-amber-50 text-[13px] font-bold text-gray-700 whitespace-nowrap"
+                style={{ paddingTop: '0.875rem', paddingBottom: '0.875rem' }}
+              >
+                🇮🇳 +91
+              </div>
+              <input
+                type="tel"
                 placeholder="98765 43210"
                 maxLength={10}
-                {...form.register("phone")}
-                className={`h-12 pl-10 bg-gray-50 border-gray-200 focus-visible:ring-primary ${
-                  form.formState.errors.phone ? "border-destructive" : ""
-                }`}
+                {...form.register("phone", {
+                  onChange: (e) => e.target.value = e.target.value.replace(/\D/g, '')
+                })}
+                className={inputBase(!!form.formState.errors.phone) + ' flex-1'}
               />
             </div>
-            {form.formState.errors.phone && (
-              <p className="text-sm text-destructive font-medium">
-                {form.formState.errors.phone.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="modelId" className="text-foreground font-semibold">
-                Vehicle Model
-              </Label>
-              <Select
-                onValueChange={(value) => {
-                  form.setValue("modelId", value || "", { shouldValidate: true });
-                  // Reset colour when model changes
-                  form.setValue("colourId", "", { shouldValidate: true });
-                }}
-                defaultValue={form.getValues("modelId")}
+          <Field label="Vehicle Model" error={form.formState.errors.modelId?.message}>
+            <div className="relative">
+              <select
+                {...form.register("modelId", {
+                  onChange: () => form.setValue("colourId", "", { shouldValidate: true })
+                })}
+                className={selectBase(!!form.formState.errors.modelId)}
               >
-                <SelectTrigger
-                  className={`h-12 bg-gray-50 border-gray-200 focus:ring-primary ${
-                    form.formState.errors.modelId ? "border-destructive" : ""
-                  }`}
-                >
-                  <SelectValue placeholder="Select Model" />
-                </SelectTrigger>
-                <SelectContent>
-                  {models.map((m) => (
-                    <SelectItem key={m.id} value={m.id}>
-                      {m.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {form.formState.errors.modelId && (
-                <p className="text-sm text-destructive font-medium">
-                  {form.formState.errors.modelId.message}
-                </p>
-              )}
+                <option value="">Select Model</option>
+                {models.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+              </select>
+              <ChevronDown />
             </div>
+          </Field>
 
-            <div className="space-y-2">
-              <Label htmlFor="colourId" className="text-foreground font-semibold">
-                Colour
-              </Label>
-              <Select
+          <Field label="Colour" error={form.formState.errors.colourId?.message}>
+            <div className="relative">
+              <select
+                {...form.register("colourId")}
                 disabled={!selectedModelId}
-                onValueChange={(value) =>
-                  form.setValue("colourId", value || "", { shouldValidate: true })
-                }
-                value={form.watch("colourId")}
+                className={selectBase(!!form.formState.errors.colourId) + (!selectedModelId ? ' opacity-50' : '')}
               >
-                <SelectTrigger
-                  className={`h-12 bg-gray-50 border-gray-200 focus:ring-primary ${
-                    form.formState.errors.colourId ? "border-destructive" : ""
-                  }`}
-                >
-                  <SelectValue placeholder="Select Colour" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableColours.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {form.formState.errors.colourId && (
-                <p className="text-sm text-destructive font-medium">
-                  {form.formState.errors.colourId.message}
-                </p>
-              )}
+                <option value="">Select Colour</option>
+                {availableColours.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+              <ChevronDown />
             </div>
-          </div>
+          </Field>
 
-          <div className="space-y-2">
-            <Label htmlFor="vin" className="text-foreground font-semibold">
-              Vehicle Identification Number (VIN)
-            </Label>
-            <Input
-              id="vin"
+          <Field label="Vehicle Identification Number (VIN)" error={form.formState.errors.vin?.message}>
+            <input
+              type="text"
               placeholder="17-character VIN"
               maxLength={17}
               {...form.register("vin", {
-                onChange: (e) => {
-                  e.target.value = e.target.value.toUpperCase();
-                },
+                onChange: (e) => e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '')
               })}
-              className={`h-12 uppercase font-mono text-sm bg-gray-50 border-gray-200 focus-visible:ring-primary ${
-                form.formState.errors.vin ? "border-destructive" : ""
-              }`}
+              className={inputBase(!!form.formState.errors.vin) + ' tracking-widest font-semibold uppercase'}
+              style={{ fontFamily: "var(--font-mono)" }}
             />
-            {form.formState.errors.vin ? (
-              <p className="text-sm text-destructive font-medium">
-                {form.formState.errors.vin.message}
-              </p>
-            ) : (
-              <p className="text-xs text-muted-foreground mt-1">
-                You can find this on your vehicle invoice or registration certificate.
-              </p>
-            )}
-          </div>
+            <p className="text-[10px] font-normal mt-1" style={{ color: '#A16207' }}>
+              Found on your vehicle invoice or registration certificate.
+            </p>
+          </Field>
 
           {form.formState.errors.root && (
-            <div className="p-4 bg-destructive/10 text-destructive text-sm font-medium rounded-lg border border-destructive/20 flex items-start gap-2">
-              <div className="mt-0.5">⚠️</div>
-              <div>{form.formState.errors.root.message}</div>
-            </div>
+            <p className="text-sm text-destructive font-medium text-center mt-2 mb-2">
+              {form.formState.errors.root.message}
+            </p>
           )}
 
-          <Button
+          <button
             type="submit"
             disabled={loading}
-            className="w-full h-14 text-lg font-black tracking-wide uppercase shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-[0.98]"
+            className="btn-glow w-full py-4 mt-2 rounded-2xl text-white text-[15px] font-extrabold tracking-widest uppercase transition-transform active:scale-[0.97]"
+            style={{ background: 'linear-gradient(135deg,#B30010 0%,#EB0A1E 55%,#FF3347 100%)', opacity: loading ? 0.8 : 1 }}
           >
-            {loading ? "Registering..." : "Submit Entry"}
-          </Button>
+            {loading ? "Registering..." : "Submit Entry →"}
+          </button>
+
+          <div className="flex items-center justify-center gap-1.5 mt-3">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M6 1L7.5 4.5H11L8.5 6.5L9.5 10L6 8L2.5 10L3.5 6.5L1 4.5H4.5Z" fill="#D4930A" />
+            </svg>
+            <p className="text-[10px] font-medium" style={{ color: '#92400E' }}>
+              Your information is secure with us
+            </p>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M6 1L7.5 4.5H11L8.5 6.5L9.5 10L6 8L2.5 10L3.5 6.5L1 4.5H4.5Z" fill="#D4930A" />
+            </svg>
+          </div>
         </form>
-      </CardContent>
-    </Card>
-  );
+      </div>
+    </div>
+  )
 }

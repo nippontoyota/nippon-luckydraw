@@ -20,12 +20,12 @@ export async function proxy(request: NextRequest) {
       throw new Error("CRITICAL: SESSION_SECRET environment variable is not set.");
     }
     const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET);
-    const { payload } = await jwtVerify(sessionCookie.value, encodedKey, {
+    await jwtVerify(sessionCookie.value, encodedKey, {
       algorithms: ["HS256"],
     });
       // Session is valid, allow request
       return NextResponse.next();
-    } catch (error) {
+    } catch {
       // Invalid or expired token
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }

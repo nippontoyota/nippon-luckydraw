@@ -76,7 +76,7 @@ export async function drawWinner(branchId: string) {
     revalidatePath("/admin/dashboard");
     revalidatePath("/winners");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Draw error:", error);
     
     // Revert the lock if we failed
@@ -85,6 +85,6 @@ export async function drawWinner(branchId: string) {
       data: { drawStatus: "PENDING" },
     }).catch(e => console.error("Failed to revert draw lock:", e));
 
-    return { error: error.message || "An error occurred while drawing the winners." };
+    return { error: error instanceof Error ? error.message : "An error occurred while drawing the winners." };
   }
 }
