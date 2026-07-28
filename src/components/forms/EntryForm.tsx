@@ -114,7 +114,7 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
               <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none">TOYOTA</p>
             </div>
           </div>
-          <div className="pookalam-spin opacity-90 flex-shrink-0 overflow-hidden rounded-full relative" style={{ width: 72, height: 72 }}>
+          <div className="pookalam-spin opacity-90 flex-shrink-0 relative" style={{ width: 72, height: 72 }}>
             <Image src="/images/pookalam.png" alt="Onam pookalam" fill sizes="72px" className="object-cover" priority />
           </div>
         </div>

@@ -71,7 +71,7 @@ export function ConfirmationScreen({
               <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none">TOYOTA</p>
             </div>
           </div>
-          <div className="pookalam-spin opacity-90 flex-shrink-0 overflow-hidden rounded-full relative" style={{ width: 64, height: 64 }}>
+          <div className="pookalam-spin opacity-90 flex-shrink-0 relative" style={{ width: 64, height: 64 }}>
             <Image src="/images/pookalam.png" alt="Onam pookalam" fill sizes="64px" className="object-cover" priority />
           </div>
         </div>
@@ -85,7 +85,7 @@ export function ConfirmationScreen({
         <div className="flex items-end justify-center gap-6 mb-1">
           <NilavilakkuLamp size={36} />
           <div className="check-pop relative flex-shrink-0">
-            <div style={{ width: 88, height: 88, position: 'relative' }} className="overflow-hidden rounded-full">
+            <div style={{ width: 88, height: 88, position: 'relative' }}>
               <Image src="/images/pookalam.png" alt="" fill sizes="88px" className="object-cover opacity-80" priority />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div
@@ -123,7 +123,7 @@ export function ConfirmationScreen({
             <p className="text-[9px] font-bold tracking-[0.22em] uppercase" style={{ color: '#FFD700' }}>Entry Ticket</p>
             <p className="text-white text-[12px] font-semibold mt-0.5">Nippon Toyota Onam Lucky Draw</p>
           </div>
-          <div className="pookalam-spin flex-shrink-0 overflow-hidden rounded-full relative" style={{ width: 36, height: 36 }}>
+          <div className="pookalam-spin flex-shrink-0 relative" style={{ width: 36, height: 36 }}>
             <Image src="/images/pookalam.png" alt="" fill sizes="36px" className="object-cover" />
           </div>
         </div>
