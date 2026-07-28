@@ -5,50 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { assessEntry } from "@/lib/fraud";
 
-const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL;
-const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
-
-async function redisIncr(key: string): Promise<number> {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) {
-    console.warn("Upstash Redis not configured. Skipping rate limit.");
-    return 1;
-  }
-  const res = await fetch(`${UPSTASH_URL}/incr/${key}`, {
-    headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-  });
-  const data = await res.json();
-  return data.result;
-}
-
-async function redisExpire(key: string, ttlSeconds: number) {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return;
-  await fetch(`${UPSTASH_URL}/expire/${key}/${ttlSeconds}`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-  });
-}
-
-async function checkRateLimit(ip: string, phone: string) {
-  try {
-    // Check IP (5 requests / 1 min)
-    const ipKey = `rate:ip:${ip}`;
-    const ipCount = await redisIncr(ipKey);
-    if (ipCount === 1) await redisExpire(ipKey, 60);
-
-    // Check Phone (1 request / 10 min)
-    const phoneKey = `rate:phone:${phone}`;
-    const phoneCount = await redisIncr(phoneKey);
-    if (phoneCount === 1) await redisExpire(phoneKey, 10 * 60);
-
-    if (ipCount > 5) return { error: "Too many requests from this IP. Please try again later." };
-    if (phoneCount > 1) return { error: "Too many requests for this phone number." };
-  } catch (error) {
-    console.error("Rate limit check failed:", error);
-    // Fail open if Redis is down
-  }
-  
-  return null;
-}
 
 export async function submitEntry(data: EntryInput) {
   const reqHeaders = await headers();
@@ -68,11 +24,6 @@ export async function submitEntry(data: EntryInput) {
     return { error: "Spam detected." };
   }
 
-  // 3. Rate Limiting Check
-  const rateLimitError = await checkRateLimit(ip, phone);
-  if (rateLimitError) {
-    return rateLimitError;
-  }
 
   try {
     // 4 & 5. Global Uniqueness & Branch Lookup (Parallel)
