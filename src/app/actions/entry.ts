@@ -3,6 +3,7 @@
 import { entrySchema, type EntryInput } from "@/schemas/entry";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { assessEntry } from "@/lib/fraud";
 
 
@@ -92,5 +93,21 @@ export async function submitEntry(data: EntryInput) {
   } catch (error) {
     console.error("Submission error:", error);
     return { error: "Failed to submit entry. Please try again later." };
+  }
+}
+
+export async function deleteEntry(id: string) {
+  try {
+    await prisma.$transaction([
+      prisma.winner.deleteMany({ where: { entryId: id } }),
+      prisma.whatsAppLog.deleteMany({ where: { entryId: id } }),
+      prisma.entry.delete({ where: { id } }),
+    ]);
+    
+    revalidatePath("/admin/dashboard/entries");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to delete entry:", error);
+    return { error: "Failed to delete entry. It might have related records." };
   }
 }
