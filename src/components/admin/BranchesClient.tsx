@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { QrCode, Plus, Trash2, MapPin, Link as LinkIcon, Users, AlertTriangle } from "lucide-react";
+import { QrCode, Plus, Trash2, MapPin, Link as LinkIcon, Users, AlertTriangle, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Branch {
@@ -263,12 +263,29 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
                     {qrModal.url}
                   </p>
                 </div>
-                <Button 
-                  className="w-full h-12 rounded-xl font-bold bg-gray-900 text-white hover:bg-gray-800 transition-colors"
-                  onClick={() => setQrModal({ ...qrModal, isOpen: false })}
-                >
-                  Done
-                </Button>
+                <div className="flex w-full gap-3">
+                  <Button 
+                    variant="outline"
+                    className="flex-1 h-12 rounded-xl font-bold gap-2"
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = qrModal.dataUrl;
+                      link.download = `${qrModal.branchName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_qr.png`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                  >
+                    <Download size={18} />
+                    Download
+                  </Button>
+                  <Button 
+                    className="flex-1 h-12 rounded-xl font-bold bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+                    onClick={() => setQrModal({ ...qrModal, isOpen: false })}
+                  >
+                    Done
+                  </Button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
