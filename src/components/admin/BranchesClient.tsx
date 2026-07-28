@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { createBranch } from "@/app/actions/admin";
 import QRCode from "qrcode";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +18,7 @@ interface Branch {
 
 export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUrl: string }) {
   const [loading, setLoading] = useState(false);
+  const submittingRef = useRef(false);
   const [qrModal, setQrModal] = useState<{ isOpen: boolean; url: string; dataUrl: string; branchName: string }>({
     isOpen: false,
     url: "",
@@ -26,16 +27,24 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
   });
 
   const handleCreate = async (formData: FormData) => {
-    setLoading(true);
-    const result = await createBranch(formData);
-    setLoading(false);
+    if (submittingRef.current) return;
     
-    if (result?.error) {
-      alert(result.error);
-    } else {
-      // Clear form
-      const form = document.getElementById("create-branch-form") as HTMLFormElement;
-      if (form) form.reset();
+    submittingRef.current = true;
+    setLoading(true);
+    
+    try {
+      const result = await createBranch(formData);
+      
+      if (result?.error) {
+        alert(result.error);
+      } else {
+        // Clear form
+        const form = document.getElementById("create-branch-form") as HTMLFormElement;
+        if (form) form.reset();
+      }
+    } finally {
+      setLoading(false);
+      submittingRef.current = false;
     }
   };
 
