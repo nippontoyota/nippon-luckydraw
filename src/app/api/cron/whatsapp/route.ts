@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendWhatsAppMessage } from "@/lib/doubletick";
+import { sendWhatsAppMessage, DOUBLETICK_CONFIRM_TEMPLATE } from "@/lib/doubletick";
 
 const CRON_SECRET = process.env.CRON_SECRET || "local_dev_cron_secret";
 
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
             vin: entry.vin,
             confirmationUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/confirmation/${entry.id}`,
           };
-          await sendWhatsAppMessage(entry.phone, "luckydraw_confirmation", variables);
+          await sendWhatsAppMessage(entry.phone, DOUBLETICK_CONFIRM_TEMPLATE, variables);
 
         await prisma.whatsAppLog.update({
           where: { id: log.id },
