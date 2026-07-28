@@ -204,10 +204,6 @@ export function ConfirmationScreen({
         </button>
       </div>
 
-      <p className="text-center text-[11px] font-normal mb-6 relative z-10" style={{ color: '#A16207' }}>
-        Questions? Call{' '}
-        <span className="font-bold" style={{ color: '#EB0A1E' }}>1800-102-8612</span>
-      </p>
     </div>
   )
 }
