@@ -98,7 +98,7 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
           style={{ background: 'linear-gradient(135deg, #1A0005 0%, #B30010 40%, #EB0A1E 100%)' }}
         >
           {/* Petal Rain Background */}
-          <PetalRain count={25} />
+          <PetalRain />
           {[
             { top: '10%', left: '10%', size: 10, color: '#FFD700', delay: '0s' },
             { top: '20%', left: '80%', size: 8, color: '#FFA000', delay: '0.6s' },
