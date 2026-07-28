@@ -82,3 +82,60 @@ export function PetalRain() {
     </div>
   )
 }
+
+export function LotusLoader({ size = 120 }: { size?: number }) {
+  return (
+    <div className="relative flex items-center justify-center animate-[spin_15s_linear_infinite]" style={{ width: size, height: size }}>
+      {/* Outer Petals */}
+      {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, i) => (
+        <div
+          key={`outer-${deg}`}
+          className="absolute"
+          style={{
+            top: '50%',
+            left: '50%',
+            width: size * 0.45,
+            height: size * 0.45,
+            background: i % 2 === 0 ? 'linear-gradient(135deg, rgba(235,10,30,0.85) 0%, rgba(179,0,16,0.95) 100%)' : 'linear-gradient(135deg, rgba(255,215,0,0.85) 0%, rgba(255,160,0,0.95) 100%)',
+            borderRadius: '50% 0 50% 0',
+            transformOrigin: '0 0',
+            animation: `bloom-petal 2s ease-in-out infinite alternate`,
+            animationDelay: `${i * 0.15}s`,
+            boxShadow: '0 0 20px rgba(235,10,30,0.4)',
+            ['--deg' as any]: `${deg}deg`,
+          }}
+        />
+      ))}
+      {/* Inner Petals */}
+      {[22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5].map((deg, i) => (
+        <div
+          key={`inner-${deg}`}
+          className="absolute"
+          style={{
+            top: '50%',
+            left: '50%',
+            width: size * 0.3,
+            height: size * 0.3,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,215,0,0.95) 100%)',
+            borderRadius: '50% 0 50% 0',
+            transformOrigin: '0 0',
+            animation: `bloom-petal-inner 2s ease-in-out infinite alternate`,
+            animationDelay: `${i * 0.15}s`,
+            boxShadow: '0 0 15px rgba(255,255,255,0.5)',
+            ['--deg' as any]: `${deg}deg`,
+          }}
+        />
+      ))}
+      <div 
+        className="absolute rounded-full z-10"
+        style={{
+          width: size * 0.22,
+          height: size * 0.22,
+          background: '#FFD700',
+          boxShadow: '0 0 25px #FFD700, inset 0 0 15px #EB0A1E',
+          animation: 'pulse-glow 2s ease-in-out infinite alternate'
+        }}
+      />
+    </div>
+  )
+}

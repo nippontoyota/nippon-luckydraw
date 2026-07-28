@@ -13,6 +13,7 @@ import {
   NilavilakkuLamp,
   Sparkle,
   PetalRain,
+  LotusLoader,
 } from "./FestiveElements";
 
 interface ModelWithColours {
@@ -109,12 +110,12 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
           ))}
 
           <div className="flex flex-col items-center justify-center relative z-10 text-center">
-            <div className="mb-10 slide-up" style={{ animationDelay: '0.1s' }}>
+            <div className="mb-14 slide-up" style={{ animationDelay: '0.1s' }}>
               <ToyotaEmblem size={64} white />
             </div>
             
-            <div className="pookalam-spin relative mb-8" style={{ width: 140, height: 140 }}>
-              <Image src="/images/pookalam.png" alt="Loading" fill sizes="140px" className="object-cover" priority />
+            <div className="mb-14 relative slide-up" style={{ animationDelay: '0.15s' }}>
+              <LotusLoader size={160} />
             </div>
             
             <h2 className="text-white text-[22px] font-black tracking-widest uppercase mb-2 slide-up" style={{ animationDelay: '0.2s' }}>Processing</h2>
