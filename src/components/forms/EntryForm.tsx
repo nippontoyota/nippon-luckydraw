@@ -116,8 +116,10 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
               <ToyotaEmblem size={64} white />
             </div>
             
-            <div className="mb-14 relative slide-up pookalam-spin shadow-2xl" style={{ animationDelay: '0.15s', width: 160, height: 160, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(255,215,0,0.3)' }}>
-              <Image src="/images/pookalam-generated.png" alt="Loading" fill sizes="160px" className="object-cover" priority />
+            <div className="mb-14 relative slide-up" style={{ animationDelay: '0.15s' }}>
+              <div className="pookalam-spin shadow-2xl" style={{ width: 160, height: 160, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(255,215,0,0.3)', position: 'relative' }}>
+                <Image src="/images/pookalam-generated.png" alt="Loading" fill sizes="160px" className="object-cover" priority />
+              </div>
             </div>
             
             <h2 className="text-white text-[22px] font-black tracking-widest uppercase mb-2 slide-up" style={{ animationDelay: '0.2s' }}>Processing</h2>
