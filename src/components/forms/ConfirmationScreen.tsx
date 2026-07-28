@@ -28,14 +28,14 @@ export function ConfirmationScreen({
   vin,
 }: ConfirmationScreenProps) {
   const router = useRouter();
-  
+
   const confetti = useMemo(() =>
     Array.from({ length: 30 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       delay: Math.random() * 1.4,
       dur: 1.6 + Math.random() * 1.2,
-      color: ['#EB0A1E','#D4930A','#FFD700','#F5A623','#fff','#FF6B6B','#FF8F00','#FFF176'][i % 8],
+      color: ['#EB0A1E', '#D4930A', '#FFD700', '#F5A623', '#fff', '#FF6B6B', '#FF8F00', '#FFF176'][i % 8],
       size: 6 + Math.floor(Math.random() * 5),
       shape: i % 3,
     })), [])
@@ -104,7 +104,7 @@ export function ConfirmationScreen({
 
         <div className="text-center px-5 mt-3">
           <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-1" style={{ color: '#D4930A' }}>
-            Onam Festival 2025
+            Onam 2026
           </p>
           <h2 className="text-gray-900 text-[28px] font-black leading-tight">
             You're In! 🎉
@@ -151,10 +151,10 @@ export function ConfirmationScreen({
 
           <div className="space-y-3">
             {[
-              { label: 'Name',    value: name },
+              { label: 'Name', value: name },
               { label: 'Vehicle', value: modelName },
-              { label: 'Colour',  value: colourName },
-              { label: 'Status',  value: null },
+              { label: 'Colour', value: colourName },
+              { label: 'Status', value: null },
             ].map(row => (
               <div key={row.label} className="flex items-center justify-between gap-3">
                 <span className="text-[10px] font-semibold uppercase tracking-wider flex-shrink-0" style={{ color: '#9CA3AF' }}>{row.label}</span>

@@ -131,7 +131,7 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <div className="h-px flex-1" style={{ background: 'rgba(255,215,0,0.35)' }} />
-              <p className="text-[10px] font-bold tracking-[0.22em] uppercase" style={{ color: '#FFD700' }}>Onam Festival 2025</p>
+              <p className="text-[10px] font-bold tracking-[0.22em] uppercase" style={{ color: '#FFD700' }}>Onam Festival 2026</p>
               <div className="h-px flex-1" style={{ background: 'rgba(255,215,0,0.35)' }} />
             </div>
             <h1 className="text-white text-[22px] font-black leading-tight">
@@ -169,7 +169,7 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
             <div className="w-1 h-8 rounded-full" style={{ background: 'linear-gradient(180deg,#EB0A1E,#FF6B35)' }} />
             <div>
               <p className="text-[13px] font-extrabold text-gray-800">Registration Form</p>
-              <p className="text-[11px] font-normal" style={{ color: '#92400E' }}>{branchName} Branch • Onam 2025</p>
+              <p className="text-[11px] font-normal" style={{ color: '#92400E' }}>{branchName} Branch • Onam 2026</p>
             </div>
             <div className="ml-auto flex gap-1">
               {[0, 1, 2].map(i => (
