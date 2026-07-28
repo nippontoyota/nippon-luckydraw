@@ -65,6 +65,7 @@ export async function deleteBranch(branchId: string) {
     console.error("Failed to delete branch:", error);
     return { error: `Failed to delete branch: ${error?.message || String(error)}` };
   }
+}
 
 export async function deleteBranches(branchIds: string[]) {
   if (!branchIds || branchIds.length === 0) return { success: true };
