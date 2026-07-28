@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import QRCode from "qrcode";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   ToyotaEmblem,
   NilavilakkuLamp,
@@ -61,7 +62,13 @@ export function ConfirmationScreen({
       </div>
 
       {/* Header */}
-      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}>
+      <motion.div 
+        initial={{ y: -50, opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }} 
+        transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
+        className="relative overflow-hidden" 
+        style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}
+      >
         <div className="h-9" />
         <div className="relative flex items-center justify-between px-5 pb-4">
           <div className="flex items-center gap-2.5">
@@ -78,13 +85,21 @@ export function ConfirmationScreen({
         <svg viewBox="0 0 390 22" className="w-full block" style={{ marginBottom: -1 }}>
           <path d="M0,22 C65,4 130,20 195,10 C260,0 325,18 390,6 L390,22 Z" fill="#FFF8E1" />
         </svg>
-      </div>
+      </motion.div>
 
       {/* Success hero */}
       <div className="flex flex-col items-center pt-5 pb-2 relative z-10">
         <div className="flex items-end justify-center gap-6 mb-1">
-          <NilavilakkuLamp size={36} />
-          <div className="check-pop relative flex-shrink-0">
+          <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, type: "spring" }}>
+            <NilavilakkuLamp size={36} />
+          </motion.div>
+          
+          <motion.div 
+            initial={{ scale: 0, rotate: -15, opacity: 0 }} 
+            animate={{ scale: 1, rotate: 0, opacity: 1 }} 
+            transition={{ delay: 0.1, type: "spring", bounce: 0.6, duration: 0.8 }}
+            className="relative flex-shrink-0"
+          >
             <div style={{ width: 88, height: 88, position: 'relative' }}>
               <Image src="/images/pookalam.png" alt="" fill sizes="88px" className="object-cover opacity-80" priority />
               <div className="absolute inset-0 flex items-center justify-center">
@@ -93,16 +108,30 @@ export function ConfirmationScreen({
                   style={{ background: 'linear-gradient(135deg,#22C55E,#16A34A)' }}
                 >
                   <svg width="26" height="22" viewBox="0 0 26 22" fill="none">
-                    <path d="M2 11L9.5 19L24 2" stroke="white" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
+                    <motion.path 
+                      initial={{ pathLength: 0 }} 
+                      animate={{ pathLength: 1 }} 
+                      transition={{ delay: 0.5, duration: 0.5 }}
+                      d="M2 11L9.5 19L24 2" 
+                      stroke="white" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" 
+                    />
                   </svg>
                 </div>
               </div>
             </div>
-          </div>
-          <NilavilakkuLamp size={36} />
+          </motion.div>
+          
+          <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4, type: "spring" }}>
+            <NilavilakkuLamp size={36} />
+          </motion.div>
         </div>
 
-        <div className="text-center px-5 mt-3">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="text-center px-5 mt-3"
+        >
           <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-1" style={{ color: '#D4930A' }}>
             Onam 2026
           </p>
@@ -113,11 +142,17 @@ export function ConfirmationScreen({
             Thank you, <span className="font-extrabold text-[#EB0A1E]">{name.split(' ')[0]}</span>!<br />
             Best of luck in the lucky draw.
           </p>
-        </div>
+        </motion.div>
       </div>
 
       {/* Ticket card */}
-      <div className="slide-up mx-4 mt-4 mb-4 rounded-3xl overflow-hidden shadow-2xl relative z-10" style={{ border: '1.5px solid #FDE68A' }}>
+      <motion.div 
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.6, type: "spring", bounce: 0.3 }}
+        className="mx-4 mt-4 mb-4 rounded-3xl overflow-hidden shadow-2xl relative z-10" 
+        style={{ border: '1.5px solid #FDE68A' }}
+      >
         <div className="px-5 py-3.5 flex items-center justify-between" style={{ background: 'linear-gradient(90deg,#1A0005 0%,#EB0A1E 100%)' }}>
           <div>
             <p className="text-[9px] font-bold tracking-[0.22em] uppercase" style={{ color: '#FFD700' }}>Entry Ticket</p>
@@ -176,18 +211,27 @@ export function ConfirmationScreen({
           <p className="text-[11px] font-bold" style={{ color: '#92400E' }}>Save this screenshot for reference</p>
           <Sparkle size={12} color="#D4930A" />
         </div>
-      </div>
+      </motion.div>
 
       {/* Actions */}
-      <div className="mx-4 mb-6 flex gap-3 relative z-10">
-        <button
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.4 }}
+        className="mx-4 mb-6 flex gap-3 relative z-10"
+      >
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.96 }}
           onClick={() => router.push('/')}
           className="flex-1 py-3.5 rounded-2xl text-[13px] font-bold transition-colors active:bg-amber-100"
           style={{ background: 'rgba(255,255,255,0.9)', border: '2px solid #FDE68A', color: '#78350F' }}
         >
           ← Home
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.96 }}
           onClick={() => {
             if (navigator.share) {
               navigator.share({
@@ -197,12 +241,12 @@ export function ConfirmationScreen({
               })
             }
           }}
-          className="flex-1 py-3.5 rounded-2xl text-[13px] font-extrabold text-white active:scale-[0.97] transition-transform"
+          className="flex-1 py-3.5 rounded-2xl text-[13px] font-extrabold text-white transition-transform"
           style={{ background: 'linear-gradient(135deg,#B30010,#EB0A1E)' }}
         >
           Share 🎊
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
     </div>
   )

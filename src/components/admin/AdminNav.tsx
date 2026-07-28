@@ -23,13 +23,13 @@ export function AdminNav() {
           <Link 
             key={item.href} 
             href={item.href} 
-            className={`flex items-center gap-3 px-3 py-2 text-[14px] font-medium rounded-md transition-colors ${
+            className={`flex items-center gap-3 px-3 py-2.5 text-[14px] font-semibold rounded-xl transition-all ${
               isActive 
-                ? "bg-gray-100 text-gray-900" 
-                : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                ? "bg-amber-50 text-[#92400E] shadow-[0_0_0_1px_rgba(251,191,36,0.3)]" 
+                : "text-gray-500 hover:bg-amber-50/50 hover:text-gray-900"
             }`}
           >
-            <Icon className={`w-[18px] h-[18px] ${isActive ? "text-primary" : "text-gray-400"}`} />
+            <Icon className={`w-[18px] h-[18px] ${isActive ? "text-[#EB0A1E]" : "text-gray-400"}`} />
             {item.label}
           </Link>
         );

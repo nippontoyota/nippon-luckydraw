@@ -7,6 +7,7 @@ import { entrySchema, type EntryInput } from "@/schemas/entry";
 import { submitEntry } from "@/app/actions/entry";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ToyotaEmblem,
   ChevronDown,
@@ -45,9 +46,14 @@ function Field({ label, error, children }: { label: string; error?: string; chil
       </label>
       {children}
       {error && (
-        <p className="text-[11px] font-medium mt-1.5 flex items-center gap-1" style={{ color: '#DC2626' }}>
+        <motion.p 
+          initial={{ opacity: 0, y: -5 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          className="text-[11px] font-medium mt-1.5 flex items-center gap-1" 
+          style={{ color: '#DC2626' }}
+        >
           <span>⚠</span> {error}
-        </p>
+        </motion.p>
       )}
     </div>
   )
@@ -93,43 +99,78 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
       <PetalRain />
 
       {/* Loading Overlay */}
-      {loading && (
-        <div className="fixed inset-0 z-[100] h-[100dvh] w-screen flex flex-col items-center justify-center p-6 text-white overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #1A0005 0%, #B30010 40%, #EB0A1E 100%)' }}
-        >
-          {/* Petal Rain Background */}
-          <PetalRain />
-          {[
-            { top: '10%', left: '10%', size: 10, color: '#FFD700', delay: '0s' },
-            { top: '20%', left: '80%', size: 8, color: '#FFA000', delay: '0.6s' },
-            { top: '70%', left: '15%', size: 7, color: '#FFD700', delay: '1.1s' },
-            { top: '80%', left: '85%', size: 9, color: '#FF8F00', delay: '0.3s' },
-            { top: '40%', left: '75%', size: 6, color: '#FFD700', delay: '1.8s' },
-          ].map((s, i) => (
-            <div key={i} className="absolute twinkle" style={{ top: s.top, left: s.left, animationDuration: `${1.6 + i * 0.4}s`, animationDelay: s.delay }}>
-              <Sparkle size={s.size} color={s.color} />
-            </div>
-          ))}
-
-          <div className="flex flex-col items-center justify-center relative z-10 text-center">
-            <div className="mb-14 slide-up" style={{ animationDelay: '0.1s' }}>
-              <ToyotaEmblem size={64} white />
-            </div>
-            
-            <div className="mb-14 relative slide-up" style={{ animationDelay: '0.15s' }}>
-              <div className="pookalam-spin shadow-2xl" style={{ width: 160, height: 160, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(255,215,0,0.3)', position: 'relative' }}>
-                <Image src="/images/pookalam-generated.png" alt="Loading" fill sizes="160px" className="object-cover" priority />
+      <AnimatePresence>
+        {loading && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            className="fixed inset-0 z-[100] h-[100dvh] w-screen flex flex-col items-center justify-center p-6 text-white overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, #1A0005 0%, #B30010 40%, #EB0A1E 100%)' }}
+          >
+            <PetalRain />
+            {[
+              { top: '10%', left: '10%', size: 10, color: '#FFD700', delay: '0s' },
+              { top: '20%', left: '80%', size: 8, color: '#FFA000', delay: '0.6s' },
+              { top: '70%', left: '15%', size: 7, color: '#FFD700', delay: '1.1s' },
+              { top: '80%', left: '85%', size: 9, color: '#FF8F00', delay: '0.3s' },
+              { top: '40%', left: '75%', size: 6, color: '#FFD700', delay: '1.8s' },
+            ].map((s, i) => (
+              <div key={i} className="absolute twinkle" style={{ top: s.top, left: s.left, animationDuration: `${1.6 + i * 0.4}s`, animationDelay: s.delay }}>
+                <Sparkle size={s.size} color={s.color} />
               </div>
-            </div>
-            
-            <h2 className="text-white text-[22px] font-black tracking-widest uppercase mb-2 slide-up" style={{ animationDelay: '0.2s' }}>Processing</h2>
-            <p className="text-white/80 text-[13px] font-medium shimmer-gold slide-up" style={{ animationDelay: '0.3s' }}>Please wait while we secure your entry...</p>
-          </div>
-        </div>
-      )}
+            ))}
 
-      {/* ── Header ── */}
-      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}>
+            <div className="flex flex-col items-center justify-center relative z-10 text-center">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }} 
+                className="mb-14"
+              >
+                <ToyotaEmblem size={64} white />
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: 0, y: 20, scale: 0.9 }} 
+                animate={{ opacity: 1, y: 0, scale: 1 }} 
+                transition={{ delay: 0.2, duration: 0.6, type: "spring" }} 
+                className="mb-14 relative"
+              >
+                <div className="pookalam-spin shadow-2xl" style={{ width: 160, height: 160, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(255,215,0,0.3)', position: 'relative' }}>
+                  <Image src="/images/pookalam-generated.png" alt="Loading" fill sizes="160px" className="object-cover" priority />
+                </div>
+              </motion.div>
+              
+              <motion.h2 
+                initial={{ opacity: 0, y: 15 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ delay: 0.3, duration: 0.5, ease: "easeOut" }} 
+                className="text-white text-[22px] font-black tracking-widest uppercase mb-2"
+              >
+                Processing
+              </motion.h2>
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }} 
+                className="text-white/80 text-[13px] font-medium shimmer-gold"
+              >
+                Please wait while we secure your entry...
+              </motion.p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Header */}
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        transition={{ duration: 0.8 }} 
+        className="relative overflow-hidden" 
+        style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}
+      >
         {[
           { top: 14, left: 18,  size: 10, color: '#FFD700', delay: '0s'   },
           { top: 28, left: 340, size: 8,  color: '#FFA000', delay: '0.6s' },
@@ -142,7 +183,12 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
           </div>
         ))}
         <div className="h-9" />
-        <div className="relative flex items-center justify-between px-5 pb-2">
+        <motion.div 
+          initial={{ y: -20, opacity: 0 }} 
+          animate={{ y: 0, opacity: 1 }} 
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+          className="relative flex items-center justify-between px-5 pb-2"
+        >
           <div className="flex items-center gap-2.5">
             <ToyotaEmblem size={38} white />
             <div>
@@ -153,8 +199,15 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
           <div className="pookalam-spin opacity-90 flex-shrink-0 relative" style={{ width: 72, height: 72 }}>
             <Image src="/images/pookalam.png" alt="Onam pookalam" fill sizes="72px" className="object-cover" priority />
           </div>
-        </div>
-        <div className="relative mx-4 mt-2 rounded-2xl overflow-hidden flex-shrink-0" style={{ height: 110 }}>
+        </motion.div>
+        
+        <motion.div 
+          initial={{ scale: 0.95, opacity: 0 }} 
+          animate={{ scale: 1, opacity: 1 }} 
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          className="relative mx-4 mt-2 rounded-2xl overflow-hidden flex-shrink-0" 
+          style={{ height: 110 }}
+        >
           <Image src="/images/onam-boat.png" alt="Happy Onam snake boat race" fill sizes="(max-width: 768px) 100vw, 420px" className="object-cover object-center" priority />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg,rgba(26,0,5,0.45) 0%,rgba(0,0,0,0) 60%)' }} />
           <div className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -162,8 +215,14 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
             <p className="text-white text-[18px] font-black leading-tight">Lucky Draw</p>
             <p className="text-[10px] font-semibold mt-0.5 shimmer-gold">Win Exclusive Prizes!</p>
           </div>
-        </div>
-        <div className="px-5 pt-4 pb-2 flex items-end gap-3">
+        </motion.div>
+        
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }} 
+          animate={{ y: 0, opacity: 1 }} 
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
+          className="px-5 pt-4 pb-2 flex items-end gap-3"
+        >
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <div className="h-px flex-1" style={{ background: 'rgba(255,215,0,0.35)' }} />
@@ -182,15 +241,18 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
             <NilavilakkuLamp size={28} />
             <NilavilakkuLamp size={28} />
           </div>
-        </div>
+        </motion.div>
         <svg viewBox="0 0 390 22" className="w-full block" style={{ marginBottom: -1 }}>
           <path d="M0,22 C65,4 130,20 195,10 C260,0 325,18 390,6 L390,22 Z" fill="#FFF8E1" />
         </svg>
-      </div>
+      </motion.div>
 
-      {/* ── Form card ── */}
+      {/* Form card */}
       <div className="relative z-10 mx-4 mt-3 mb-8 rounded-3xl overflow-visible">
-        <form
+        <motion.form
+          initial={{ y: 40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, type: "spring", bounce: 0.3, delay: 0.4 }}
           onSubmit={form.handleSubmit(onSubmit)}
           className="rounded-3xl p-5 shadow-xl"
           style={{
@@ -209,7 +271,14 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
             </div>
             <div className="ml-auto flex gap-1">
               {[0, 1, 2].map(i => (
-                <div key={i} className="w-2 h-2 rounded-full" style={{ background: i === 0 ? '#EB0A1E' : '#FDE68A', opacity: i === 0 ? 1 : 0.6 }} />
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, scale: 0 }} 
+                  animate={{ opacity: i === 0 ? 1 : 0.6, scale: 1 }}
+                  transition={{ delay: 0.6 + i * 0.1 }}
+                  className="w-2 h-2 rounded-full" 
+                  style={{ background: i === 0 ? '#EB0A1E' : '#FDE68A' }} 
+                />
               ))}
             </div>
           </div>
@@ -292,19 +361,25 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
           </Field>
 
           {form.formState.errors.root && (
-            <p className="text-sm text-destructive font-medium text-center mt-2 mb-2">
+            <motion.p 
+              initial={{ opacity: 0, height: 0 }} 
+              animate={{ opacity: 1, height: 'auto' }}
+              className="text-[13px] text-[#DC2626] font-medium bg-red-50 p-3 rounded-lg border border-red-200 mt-2 mb-2"
+            >
               {form.formState.errors.root.message}
-            </p>
+            </motion.p>
           )}
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.97 }}
             type="submit"
             disabled={loading}
-            className="btn-glow w-full py-4 mt-2 rounded-2xl text-white text-[15px] font-extrabold tracking-widest uppercase transition-transform active:scale-[0.97]"
+            className="btn-glow w-full py-4 mt-2 rounded-2xl text-white text-[15px] font-extrabold tracking-widest uppercase transition-transform"
             style={{ background: 'linear-gradient(135deg,#B30010 0%,#EB0A1E 55%,#FF3347 100%)', opacity: loading ? 0.8 : 1 }}
           >
             {loading ? "Registering..." : "Submit Entry →"}
-          </button>
+          </motion.button>
 
           <div className="flex items-center justify-center gap-1.5 mt-3">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -317,7 +392,7 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
               <path d="M6 1L7.5 4.5H11L8.5 6.5L9.5 10L6 8L2.5 10L3.5 6.5L1 4.5H4.5Z" fill="#D4930A" />
             </svg>
           </div>
-        </form>
+        </motion.form>
       </div>
     </div>
   )
