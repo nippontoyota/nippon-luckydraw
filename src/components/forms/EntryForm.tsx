@@ -92,6 +92,37 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
     <div className="flex flex-col min-h-screen relative font-sans w-full max-w-[420px] mx-auto shadow-2xl overflow-hidden" style={{ background: 'linear-gradient(180deg,#FFF8E1 0%,#FFF3CD 60%,#FFECB3 100%)' }}>
       <PetalRain />
 
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center slide-up" style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}>
+          <PetalRain />
+          {[
+            { top: '10%', left: '10%', size: 10, color: '#FFD700', delay: '0s' },
+            { top: '20%', left: '80%', size: 8, color: '#FFA000', delay: '0.6s' },
+            { top: '70%', left: '15%', size: 7, color: '#FFD700', delay: '1.1s' },
+            { top: '80%', left: '85%', size: 9, color: '#FF8F00', delay: '0.3s' },
+            { top: '40%', left: '75%', size: 6, color: '#FFD700', delay: '1.8s' },
+          ].map((s, i) => (
+            <div key={i} className="absolute twinkle" style={{ top: s.top, left: s.left, animationDuration: `${1.6 + i * 0.4}s`, animationDelay: s.delay }}>
+              <Sparkle size={s.size} color={s.color} />
+            </div>
+          ))}
+
+          <div className="flex flex-col items-center justify-center relative z-10 text-center">
+            <div className="mb-10 slide-up" style={{ animationDelay: '0.1s' }}>
+              <ToyotaEmblem size={64} white />
+            </div>
+            
+            <div className="pookalam-spin relative mb-8" style={{ width: 140, height: 140 }}>
+              <Image src="/images/pookalam.png" alt="Loading" fill sizes="140px" className="object-cover" priority />
+            </div>
+            
+            <h2 className="text-white text-[22px] font-black tracking-widest uppercase mb-2 slide-up" style={{ animationDelay: '0.2s' }}>Processing</h2>
+            <p className="text-white/80 text-[13px] font-medium shimmer-gold slide-up" style={{ animationDelay: '0.3s' }}>Please wait while we secure your entry...</p>
+          </div>
+        </div>
+      )}
+
       {/* ── Header ── */}
       <div className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}>
         {[
