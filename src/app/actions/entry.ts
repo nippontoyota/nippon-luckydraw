@@ -85,7 +85,8 @@ export async function submitEntry(data: EntryInput) {
     // Manually trigger the queue processor immediately so free Vercel accounts don't have to wait for the 1-per-day cron job.
     // We await it so Vercel doesn't kill the background process, though it adds a slight delay to the submission.
     const CRON_SECRET = process.env.CRON_SECRET || "local_dev_cron_secret";
-    const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 
+                    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
     await fetch(`${APP_URL}/api/cron/whatsapp`, {
       headers: { Authorization: `Bearer ${CRON_SECRET}` },
     }).catch(e => console.error("Failed to trigger whatsapp cron:", e));
