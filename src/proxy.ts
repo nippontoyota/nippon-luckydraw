@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-// Removed global secret check
-
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -17,12 +15,12 @@ export async function proxy(request: NextRequest) {
 
     try {
       if (!process.env.SESSION_SECRET) {
-      throw new Error("CRITICAL: SESSION_SECRET environment variable is not set.");
-    }
-    const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET);
-    await jwtVerify(sessionCookie.value, encodedKey, {
-      algorithms: ["HS256"],
-    });
+        throw new Error("CRITICAL: SESSION_SECRET environment variable is not set.");
+      }
+      const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET);
+      await jwtVerify(sessionCookie.value, encodedKey, {
+        algorithms: ["HS256"],
+      });
       // Session is valid, allow request
       return NextResponse.next();
     } catch {

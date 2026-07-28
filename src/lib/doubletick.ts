@@ -1,25 +1,88 @@
-export async function sendWhatsAppMessage(phone: string, templateName: string, variables: Record<string, string>) {
-  // Simulate network latency (200ms - 800ms)
-  const latency = Math.floor(Math.random() * 600) + 200;
-  await new Promise((resolve) => setTimeout(resolve, latency));
+const DOUBLETICK_API_URL = "https://public.doubletick.io/whatsapp/message/text";
+const DOUBLETICK_WINNER_TEMPLATE = process.env.DOUBLETICK_WINNER_TEMPLATE ?? "luckydraw_winner";
+const DOUBLETICK_CONFIRM_TEMPLATE = process.env.DOUBLETICK_CONFIRM_TEMPLATE ?? "luckydraw_confirmation";
 
-  // Simulate a 5% failure rate for testing retries
-  const shouldFail = Math.random() < 0.05;
+interface SendResult {
+  success: boolean;
+  messageId?: string;
+  error?: string;
+}
 
-  if (shouldFail) {
-    throw new Error("DoubleTick API simulated network timeout or 500 error");
+async function callDoubleTick(
+  phone: string,
+  templateName: string,
+  variables: Record<string, string>
+): Promise<SendResult> {
+  const apiKey = process.env.DOUBLETICK_API_KEY;
+
+  // Fallback to mock when no key configured
+  if (!apiKey) {
+    await new Promise((r) => setTimeout(r, 200 + Math.random() * 300));
+    if (Math.random() < 0.05) throw new Error("DoubleTick mock: simulated transient failure");
+    const messageId = `mock_${Math.random().toString(36).slice(2, 10)}`;
+    console.log(`[DoubleTick Mock] → ${phone} | tpl=${templateName} | vars=`, variables);
+    return { success: true, messageId };
   }
 
-  // Generate a mock message ID
-  const messageId = `msg_${Math.random().toString(36).substring(2, 15)}`;
-
-  console.log(`[DoubleTick Mock] Sent WhatsApp message to ${phone}`);
-  console.log(`[DoubleTick Mock] Template: ${templateName}`);
-  console.log(`[DoubleTick Mock] Variables:`, variables);
-  console.log(`[DoubleTick Mock] Message ID: ${messageId}`);
-
-  return {
-    success: true,
-    messageId,
+  // Real DoubleTick API call
+  const body = {
+    to: phone,
+    from: process.env.DOUBLETICK_FROM ?? "",
+    type: "template",
+    template: {
+      name: templateName,
+      language: { code: "en" },
+      components: [
+        {
+          type: "body",
+          parameters: Object.values(variables).map((v) => ({ type: "text", text: v })),
+        },
+      ],
+    },
   };
+
+  const res = await fetch(DOUBLETICK_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(10_000), // 10s timeout
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`DoubleTick API ${res.status}: ${text.slice(0, 200)}`);
+  }
+
+  const data = await res.json();
+  return { success: true, messageId: data?.messages?.[0]?.id ?? data?.id };
 }
+
+/**
+ * Send entry confirmation message (on registration)
+ */
+export async function sendWhatsAppMessage(
+  phone: string,
+  templateName: string,
+  variables: Record<string, string>
+): Promise<SendResult> {
+  return callDoubleTick(phone, templateName, variables);
+}
+
+/**
+ * Send winner congratulations message
+ */
+export async function sendWinnerNotification(
+  phone: string,
+  vars: { name: string; place: string; branchName: string }
+): Promise<SendResult> {
+  return callDoubleTick(phone, DOUBLETICK_WINNER_TEMPLATE, {
+    name: vars.name,
+    place: vars.place,
+    branchName: vars.branchName,
+  });
+}
+
+export { DOUBLETICK_CONFIRM_TEMPLATE };

@@ -72,6 +72,24 @@ export async function drawWinner(branchId: string, forceRerun = false) {
       });
     });
 
+    // Enqueue winner WhatsApp notifications (fire-and-forget — cron processes them)
+    await prisma.whatsAppLog.createMany({
+      data: selectedEntries.map((entry, i) => ({
+        entryId: entry.id,
+        status: "PENDING",
+        // Encode place in error field temporarily until schema supports it
+        // Cron reads this to use winner template
+        error: `winner:${i + 1}`,
+      })),
+    }).catch(e => console.error("Failed to enqueue winner notifications:", e));
+
+    // Trigger cron immediately for fast delivery
+    const CRON_SECRET = process.env.CRON_SECRET || "local_dev_cron_secret";
+    const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    fetch(`${APP_URL}/api/cron/whatsapp`, {
+      headers: { Authorization: `Bearer ${CRON_SECRET}` },
+    }).catch(() => {});
+
     revalidatePath("/admin/dashboard");
     revalidatePath("/winners");
     return { success: true };
