@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { QrCode, Plus, Trash2, MapPin, Link as LinkIcon, Users, AlertTriangle, Download } from "lucide-react";
+import { QrCode, Plus, Trash2, MapPin, Link as LinkIcon, Users, AlertTriangle, Download, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Branch {
@@ -22,6 +22,7 @@ interface Branch {
 
 export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUrl: string }) {
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const submittingRef = useRef(false);
   
@@ -44,6 +45,7 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
     
     submittingRef.current = true;
     setLoading(true);
+    setSuccess(false);
     
     try {
       const result = await createBranch(formData);
@@ -51,8 +53,10 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
       if (result?.error) {
         alert(result.error);
       } else {
+        setSuccess(true);
         const form = document.getElementById("create-branch-form") as HTMLFormElement;
         if (form) form.reset();
+        setTimeout(() => setSuccess(false), 2500);
       }
     } finally {
       setLoading(false);
@@ -219,15 +223,21 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
                 </div>
                 <Button 
                   type="submit" 
-                  className="w-full h-11 gap-2 bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 text-white font-bold shadow-md hover:shadow-lg transition-all" 
-                  disabled={loading}
+                  className={`w-full h-11 gap-2 font-bold shadow-md transition-all ${
+                    success 
+                      ? 'bg-green-600 hover:bg-green-700 text-white shadow-green-900/20' 
+                      : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 text-white hover:shadow-lg'
+                  }`}
+                  disabled={loading || success}
                 >
                   {loading ? (
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : success ? (
+                    <Check className="w-4 h-4" />
                   ) : (
                     <Plus className="w-4 h-4" />
                   )}
-                  {loading ? "Creating..." : "Create Branch"}
+                  {loading ? "Creating..." : success ? "Branch Created!" : "Create Branch"}
                 </Button>
               </form>
             </CardContent>
