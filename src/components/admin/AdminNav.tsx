@@ -6,7 +6,7 @@ import { LayoutDashboard, Store, FileText, Palette } from "lucide-react";
 import { FlagBadge } from "./FlagBadge";
 
 const navItems = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, badge: null },
+  { href: "/admin/dashboard", label: "Draw Winners", icon: LayoutDashboard, badge: null },
   { href: "/admin/dashboard/branches", label: "Branches", icon: Store, badge: null },
   { href: "/admin/dashboard/entries", label: "Entries", icon: FileText, badge: "flags" },
   { href: "/admin/dashboard/models", label: "Models & Colours", icon: Palette, badge: null },
