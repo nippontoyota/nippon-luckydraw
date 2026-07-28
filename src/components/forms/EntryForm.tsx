@@ -93,7 +93,7 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
       <PetalRain />
 
       {/* Loading Overlay */}
-      {isSubmitting && (
+      {loading && (
         <div className="fixed inset-0 z-[100] h-[100dvh] w-screen flex flex-col items-center justify-center p-6 text-white overflow-hidden"
           style={{ background: 'linear-gradient(135deg, #1A0005 0%, #B30010 40%, #EB0A1E 100%)' }}
         >
