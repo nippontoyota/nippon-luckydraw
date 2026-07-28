@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
+import QRCode from "qrcode";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   ToyotaEmblem,
   NilavilakkuLamp,
@@ -69,8 +71,8 @@ export function ConfirmationScreen({
               <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none">TOYOTA</p>
             </div>
           </div>
-          <div className="pookalam-spin opacity-90" style={{ width: 64, height: 64 }}>
-            <img src="/images/pookalam.png" alt="Onam pookalam" className="w-full h-full object-cover rounded-full" />
+          <div className="pookalam-spin opacity-90 flex-shrink-0 overflow-hidden rounded-full relative" style={{ width: 64, height: 64 }}>
+            <Image src="/images/pookalam.png" alt="Onam pookalam" fill sizes="64px" className="object-cover" priority />
           </div>
         </div>
         <svg viewBox="0 0 390 22" className="w-full block" style={{ marginBottom: -1 }}>
@@ -82,9 +84,9 @@ export function ConfirmationScreen({
       <div className="flex flex-col items-center pt-5 pb-2 relative z-10">
         <div className="flex items-end justify-center gap-6 mb-1">
           <NilavilakkuLamp size={36} />
-          <div className="check-pop relative">
-            <div style={{ width: 88, height: 88, position: 'relative' }}>
-              <img src="/images/pookalam.png" alt="" className="w-full h-full object-cover rounded-full opacity-80" />
+          <div className="check-pop relative flex-shrink-0">
+            <div style={{ width: 88, height: 88, position: 'relative' }} className="overflow-hidden rounded-full">
+              <Image src="/images/pookalam.png" alt="" fill sizes="88px" className="object-cover opacity-80" priority />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div
                   className="w-12 h-12 rounded-full flex items-center justify-center shadow-xl"
@@ -121,8 +123,8 @@ export function ConfirmationScreen({
             <p className="text-[9px] font-bold tracking-[0.22em] uppercase" style={{ color: '#FFD700' }}>Entry Ticket</p>
             <p className="text-white text-[12px] font-semibold mt-0.5">Nippon Toyota Onam Lucky Draw</p>
           </div>
-          <div className="pookalam-spin" style={{ width: 36, height: 36 }}>
-            <img src="/images/pookalam.png" alt="" className="w-full h-full object-cover rounded-full" />
+          <div className="pookalam-spin flex-shrink-0 overflow-hidden rounded-full relative" style={{ width: 36, height: 36 }}>
+            <Image src="/images/pookalam.png" alt="" fill sizes="36px" className="object-cover" />
           </div>
         </div>
 

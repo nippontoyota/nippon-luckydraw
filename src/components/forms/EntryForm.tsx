@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { entrySchema, type EntryInput } from "@/schemas/entry";
 import { submitEntry } from "@/app/actions/entry";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   ToyotaEmblem,
   ChevronDown,
@@ -113,12 +114,12 @@ export function EntryForm({ slug, branchName, models }: EntryFormProps) {
               <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none">TOYOTA</p>
             </div>
           </div>
-          <div className="pookalam-spin opacity-90" style={{ width: 72, height: 72 }}>
-            <img src="/images/pookalam.png" alt="Onam pookalam" className="w-full h-full object-cover rounded-full" />
+          <div className="pookalam-spin opacity-90 flex-shrink-0 overflow-hidden rounded-full relative" style={{ width: 72, height: 72 }}>
+            <Image src="/images/pookalam.png" alt="Onam pookalam" fill sizes="72px" className="object-cover" priority />
           </div>
         </div>
-        <div className="relative mx-4 mt-2 rounded-2xl overflow-hidden" style={{ height: 110 }}>
-          <img src="/images/onam-boat.png" alt="Happy Onam snake boat race" className="w-full h-full object-cover object-center" />
+        <div className="relative mx-4 mt-2 rounded-2xl overflow-hidden flex-shrink-0" style={{ height: 110 }}>
+          <Image src="/images/onam-boat.png" alt="Happy Onam snake boat race" fill sizes="(max-width: 768px) 100vw, 420px" className="object-cover object-center" priority />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg,rgba(26,0,5,0.45) 0%,rgba(0,0,0,0) 60%)' }} />
           <div className="absolute left-4 top-1/2 -translate-y-1/2">
             <p className="text-white/80 text-[9px] font-semibold tracking-[0.2em] uppercase">Festival Offer</p>
