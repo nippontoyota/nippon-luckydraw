@@ -16,7 +16,7 @@ export default async function AdminDashboardLayout({
   }
 
   return (
-    <div className="min-h-screen flex text-gray-900 font-sans" style={{ background: '#FDF9F1' }}>
+    <div className="h-screen overflow-hidden flex text-gray-900 font-sans" style={{ background: '#FDF9F1' }}>
       <SupabaseRealtime />
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-amber-200/50 flex-col hidden md:flex relative overflow-hidden shadow-[4px_0_24px_rgba(212,147,10,0.05)]">
