@@ -47,7 +47,7 @@ export async function GET(request: Request) {
           branchName: entry.branch.name,
           vehicle: `${entry.model.name} (${entry.colour.name})`,
             vin: entry.vin,
-            confirmationUrl: `${process.env.NEXT_PUBLIC_APP_URL || "https://luckydraw-phi.vercel.app"}/confirmation/${entry.id}`,
+            confirmationUrl: `https://nippon-luckydraw-phi.vercel.app/confirmation/${entry.id}`,
           };
           await sendWhatsAppMessage(entry.phone, DOUBLETICK_CONFIRM_TEMPLATE, variables);
 
