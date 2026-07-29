@@ -76,8 +76,7 @@ export function ConfirmationScreen({
               <Image src="/images/logo_for_customer_facing.png" alt="Toyota Emblem" fill sizes="32px" className="object-contain" priority />
             </div>
             <div>
-              <p className="text-white/60 text-[9px] font-semibold tracking-[0.2em] uppercase">Nippon</p>
-              <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none">TOYOTA</p>
+              <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none uppercase mt-1">NIPPON TOYOTA</p>
             </div>
           </div>
           <div className="pookalam-spin opacity-90 flex-shrink-0 relative" style={{ width: 64, height: 64 }}>
