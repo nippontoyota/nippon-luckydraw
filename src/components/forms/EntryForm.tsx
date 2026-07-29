@@ -209,8 +209,9 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
                 <div className="relative h-14 w-14">
                   <Image src="/images/logo_for_customer_facing.png" alt="Toyota Emblem" fill sizes="56px" className="object-contain object-center" priority />
                 </div>
-                <div className="text-center mt-3">
-                  <p className="text-white text-[22px] font-black tracking-[0.1em] leading-none uppercase">NIPPON TOYOTA</p>
+                <div className="flex flex-col items-center mt-3">
+                  <p className="text-white text-[20px] font-black tracking-[0.15em] leading-tight uppercase">NIPPON</p>
+                  <p className="text-white text-[20px] font-black tracking-[0.15em] leading-none uppercase">TOYOTA</p>
                 </div>
               </motion.div>
               
@@ -276,8 +277,9 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
             <div className="relative h-8 w-8">
               <Image src="/images/logo_for_customer_facing.png" alt="Toyota Emblem" fill sizes="32px" className="object-contain" priority />
             </div>
-            <div>
-              <p className="text-white text-[17px] font-black tracking-[0.1em] leading-none uppercase mt-1">NIPPON TOYOTA</p>
+            <div className="flex flex-col justify-center">
+              <p className="text-white text-[16px] font-black tracking-[0.15em] leading-tight uppercase">NIPPON</p>
+              <p className="text-white text-[16px] font-black tracking-[0.15em] leading-none uppercase">TOYOTA</p>
             </div>
           </div>
           <div className="pookalam-spin opacity-90 flex-shrink-0 relative" style={{ width: 72, height: 72 }}>
