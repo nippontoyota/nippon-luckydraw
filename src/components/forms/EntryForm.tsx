@@ -32,7 +32,7 @@ const inputBase = (hasError: boolean) =>
   `w-full px-4 py-3.5 rounded-2xl text-[14px] font-medium border-2 transition-all bg-white outline-none ` +
   (hasError
     ? 'border-red-400'
-    : 'border-amber-200 focus:border-[#EB0A1E] focus:shadow-[0_0_0_3px_rgba(235,10,30,0.12)]')
+    : 'border-[#FFD400] focus:border-[#F47C00] focus:shadow-[0_0_0_3px_rgba(244,124,0,0.12)]')
 
 const selectBase = (hasError: boolean) =>
   inputBase(hasError) + ' appearance-none cursor-pointer ' +
@@ -41,7 +41,7 @@ const selectBase = (hasError: boolean) =>
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div className="mb-4">
-      <label className="block text-[11px] font-bold mb-1.5 tracking-[0.12em] uppercase" style={{ color: '#92400E' }}>
+      <label className="block text-[11px] font-bold mb-1.5 tracking-[0.12em] uppercase" style={{ color: '#0E3A36' }}>
         {label}
       </label>
       {children}
@@ -173,7 +173,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
   };
 
   return (
-    <div className="flex flex-col min-h-screen relative font-sans w-full max-w-[420px] mx-auto shadow-2xl overflow-hidden" style={{ background: 'linear-gradient(180deg,#FFF8E1 0%,#FFF3CD 60%,#FFECB3 100%)' }}>
+    <div className="flex flex-col min-h-screen relative font-sans w-full max-w-[420px] mx-auto shadow-2xl overflow-hidden" style={{ background: '#FFF4E1' }}>
       <PetalRain />
 
       {/* Loading Overlay */}
@@ -184,7 +184,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
             className="fixed inset-0 z-[100] h-[100dvh] w-screen flex flex-col items-center justify-center p-6 text-white overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, #1A0005 0%, #B30010 40%, #EB0A1E 100%)' }}
+            style={{ background: '#0E3A36' }}
           >
             <PetalRain />
             {[
@@ -253,7 +253,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
         animate={{ opacity: 1 }} 
         transition={{ duration: 0.8 }} 
         className="relative overflow-hidden" 
-        style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}
+        style={{ background: '#0E3A36' }}
       >
         {[
           { top: 14, left: 18,  size: 10, color: '#FFD700', delay: '0s'   },
@@ -292,14 +292,14 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
           animate={{ scale: 1, opacity: 1 }} 
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
           className="relative mx-4 mt-2 rounded-2xl overflow-hidden flex-shrink-0" 
-          style={{ height: 110 }}
+          style={{ height: 110, background: 'linear-gradient(90deg, #FFD400 0%, #F47C00 100%)' }}
         >
-          <Image src="/images/onam-boat.png" alt="Happy Onam snake boat race" fill sizes="(max-width: 768px) 100vw, 420px" className="object-cover object-center" priority />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg,rgba(26,0,5,0.45) 0%,rgba(0,0,0,0) 60%)' }} />
+          <Image src="/images/onam-boat.png" alt="Happy Onam snake boat race" fill sizes="(max-width: 768px) 100vw, 420px" className="object-cover object-center" priority style={{ mixBlendMode: 'multiply', opacity: 0.8 }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0) 60%)' }} />
           <div className="absolute left-4 top-1/2 -translate-y-1/2">
-            <p className="text-white/80 text-[9px] font-semibold tracking-[0.2em] uppercase">Festival Offer</p>
+            <p className="text-white/90 text-[9px] font-semibold tracking-[0.2em] uppercase">Festival Offer</p>
             <p className="text-white text-[18px] font-black leading-tight">Lucky Draw</p>
-            <p className="text-[10px] font-semibold mt-0.5 shimmer-gold">Win Exclusive Prizes!</p>
+            <p className="text-[10px] font-semibold mt-0.5 text-white/90">Win Exclusive Prizes!</p>
           </div>
         </motion.div>
         
@@ -329,7 +329,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
           </div>
         </motion.div>
         <svg viewBox="0 0 390 22" className="w-full block" style={{ marginBottom: -1 }}>
-          <path d="M0,22 C65,4 130,20 195,10 C260,0 325,18 390,6 L390,22 Z" fill="#FFF8E1" />
+          <path d="M0,22 C65,4 130,20 195,10 C260,0 325,18 390,6 L390,22 Z" fill="#FFF4E1" />
         </svg>
       </motion.div>
 
@@ -342,18 +342,18 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
           onSubmit={form.handleSubmit(onSubmit)}
           className="rounded-3xl p-5 shadow-xl"
           style={{
-            background: 'rgba(255,255,255,0.97)',
-            border: '1.5px solid rgba(245,166,35,0.3)',
-            boxShadow: '0 8px 40px rgba(212,147,10,0.18), 0 2px 8px rgba(0,0,0,0.08)',
+            background: '#ffffff',
+            border: '1.5px solid #FFD400',
+            boxShadow: '0 8px 40px rgba(0,0,0,0.08)',
           }}
         >
           <input type="text" {...form.register("honeypot")} className="absolute -left-[9999px] opacity-0 pointer-events-none" tabIndex={-1} aria-hidden="true" />
           
-          <div className="flex items-center gap-2.5 mb-5 pb-4" style={{ borderBottom: '1px solid #FDE68A' }}>
-            <div className="w-1 h-8 rounded-full" style={{ background: 'linear-gradient(180deg,#EB0A1E,#FF6B35)' }} />
+          <div className="flex items-center gap-2.5 mb-5 pb-4" style={{ borderBottom: '1px solid #FFD400' }}>
+            <div className="w-1 h-8 rounded-full" style={{ background: '#F47C00' }} />
             <div>
-              <p className="text-[13px] font-extrabold text-gray-800">Registration Form</p>
-              <p className="text-[11px] font-normal" style={{ color: '#92400E' }}>{branchName} Branch • Onam 2026</p>
+              <p className="text-[13px] font-extrabold text-[#0E3A36]">Registration Form</p>
+              <p className="text-[11px] font-normal" style={{ color: '#6A8E2C' }}>{branchName} Branch • Onam 2026</p>
             </div>
             <div className="ml-auto flex gap-1">
               {[0, 1, 2].map(i => (
@@ -363,7 +363,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
                   animate={{ opacity: i === 0 ? 1 : 0.6, scale: 1 }}
                   transition={{ delay: 0.6 + i * 0.1 }}
                   className="w-2 h-2 rounded-full" 
-                  style={{ background: i === 0 ? '#EB0A1E' : '#FDE68A' }} 
+                  style={{ background: i === 0 ? '#F47C00' : '#FFD400' }} 
                 />
               ))}
             </div>
@@ -381,7 +381,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
           <Field label="Mobile Number" error={form.formState.errors.phone?.message}>
             <div className="flex gap-2">
               <div
-                className="flex items-center gap-1.5 px-3.5 rounded-2xl border-2 border-amber-200 bg-amber-50 text-[13px] font-bold text-gray-700 whitespace-nowrap"
+                className="flex items-center gap-1.5 px-3.5 rounded-2xl border-2 border-[#FFD400] bg-white text-[13px] font-bold text-gray-700 whitespace-nowrap"
                 style={{ paddingTop: '0.875rem', paddingBottom: '0.875rem' }}
               >
                 🇮🇳 +91
@@ -439,7 +439,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
             </p>
           </Field>
 
-          <div className="mt-8 mb-6 bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+          <div className="mt-8 mb-6 bg-white p-4 rounded-xl border border-[#FFD400]">
             <label className="flex items-start gap-3 cursor-pointer group">
               <div className="relative flex items-center justify-center mt-0.5">
                 <input
@@ -447,14 +447,14 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
                   {...form.register("confirm")}
                   className="peer sr-only"
                 />
-                <div className="w-5 h-5 rounded border-2 border-amber-300 bg-white peer-checked:bg-[#EB0A1E] peer-checked:border-[#EB0A1E] transition-all group-hover:border-amber-400 shadow-sm" />
+                <div className="w-5 h-5 rounded border-2 border-[#FFD400] bg-white peer-checked:bg-[#0E3A36] peer-checked:border-[#0E3A36] transition-all shadow-sm" />
                 <svg className="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <span className="text-[11px] leading-relaxed font-medium text-gray-700 select-none">
+              <span className="text-[11px] leading-relaxed font-medium text-[#0E3A36] select-none">
                 I confirm that the details provided are accurate and agree to the 
-                <a href="#" className="text-[#EB0A1E] font-bold mx-1 hover:underline">Terms &amp; Conditions</a> 
+                <a href="#" className="text-[#F47C00] font-bold mx-1 hover:underline">Terms &amp; Conditions</a> 
                 of the Nippon Toyota Lucky Draw.
               </span>
             </label>
@@ -485,8 +485,8 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
             whileTap={{ scale: 0.97 }}
             type="submit"
             disabled={loading}
-            className="btn-glow w-full py-4 mt-2 rounded-2xl text-white text-[15px] font-extrabold tracking-widest uppercase transition-transform"
-            style={{ background: 'linear-gradient(135deg,#B30010 0%,#EB0A1E 55%,#FF3347 100%)', opacity: loading ? 0.8 : 1 }}
+            className="w-full py-4 mt-2 rounded-2xl text-white text-[15px] font-extrabold tracking-widest uppercase transition-transform"
+            style={{ background: '#F47C00', opacity: loading ? 0.8 : 1 }}
           >
             {loading ? "Registering..." : "Submit Entry →"}
           </motion.button>

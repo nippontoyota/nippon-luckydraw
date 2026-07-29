@@ -86,17 +86,17 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
-                  <thead className="text-[11px] text-muted-foreground uppercase tracking-wider bg-gray-50 border-b border-gray-100">
+                  <thead className="text-sm font-medium text-gray-500 bg-gray-50 border-b border-gray-100">
                     <tr>
-                      <th className="px-5 py-3 font-semibold">Ticket ID</th>
-                      <th className="px-5 py-3 font-semibold">Date</th>
-                      <th className="px-5 py-3 font-semibold">Name</th>
-                      <th className="px-5 py-3 font-semibold">Phone</th>
-                      <th className="px-5 py-3 font-semibold">Vehicle & Colour</th>
-                      <th className="px-5 py-3 font-semibold">VIN</th>
-                      <th className="px-5 py-3 font-semibold">Flags</th>
-                      <th className="px-5 py-3 font-semibold">Status</th>
-                      <th className="px-5 py-3 font-semibold text-right">Actions</th>
+                      <th className="px-5 py-3 text-left">Ticket ID</th>
+                      <th className="px-5 py-3 text-left">Date</th>
+                      <th className="px-5 py-3 text-left">Name</th>
+                      <th className="px-5 py-3 text-left">Phone</th>
+                      <th className="px-5 py-3 text-left">Vehicle & Colour</th>
+                      <th className="px-5 py-3 text-left">VIN</th>
+                      <th className="px-5 py-3 text-left">Flags</th>
+                      <th className="px-5 py-3 text-left">Status</th>
+                      <th className="px-5 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -126,7 +126,7 @@ export default async function EntriesPage(props: { searchParams?: Promise<{ sear
                             return (
                               <div className="flex flex-wrap gap-1">
                                 {flags.map((f) => (
-                                  <span key={f} className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 uppercase tracking-wide">
+                                  <span key={f} className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-red-50 text-red-700 border border-red-100">
                                     {f.replace(/_/g, " ")}
                                   </span>
                                 ))}

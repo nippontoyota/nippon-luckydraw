@@ -210,18 +210,18 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
                     onClick={() => toggleSelection(branch.id)}
                     className={`bg-white rounded-2xl p-5 transition-all cursor-pointer group relative overflow-hidden flex items-stretch gap-4 ${
                       isSelected 
-                        ? 'border-2 border-amber-500 shadow-[0_8px_30px_-4px_rgba(212,147,10,0.15)] bg-amber-50/20' 
-                        : 'border-2 border-transparent shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.08)]'
+                        ? 'border-2 border-gray-900 shadow-sm bg-gray-50/50' 
+                        : 'border-2 border-transparent shadow-sm hover:border-gray-200'
                     }`}
                   >
-                    <div className={`absolute top-0 left-0 w-1 h-full transition-all duration-300 ${isSelected ? 'bg-amber-500 opacity-100' : 'bg-gradient-to-b from-amber-400 to-red-500 opacity-0 group-hover:opacity-100'}`} />
+                    <div className={`absolute top-0 left-0 w-1 h-full transition-all duration-300 ${isSelected ? 'bg-gray-900 opacity-100' : 'bg-gray-200 opacity-0 group-hover:opacity-100'}`} />
                     
                     {/* Checkbox Column */}
                     <div className="flex items-center justify-center pt-1">
                       <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
                         isSelected 
-                          ? 'bg-amber-500 border-amber-500 text-white' 
-                          : 'border-gray-300 text-transparent group-hover:border-amber-400'
+                          ? 'bg-gray-900 border-gray-900 text-white' 
+                          : 'border-gray-300 text-transparent group-hover:border-gray-400'
                       }`}>
                         <Check size={14} className="stroke-[3]" />
                       </div>
@@ -257,8 +257,8 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
                           size="sm" 
                           className={`gap-2 h-9 transition-colors shadow-sm ${
                             isSelected 
-                              ? 'border-amber-300 text-amber-800 bg-white hover:bg-amber-50' 
-                              : 'border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-800'
+                              ? 'border-gray-300 text-gray-800 bg-white hover:bg-gray-100' 
+                              : 'border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-800'
                           }`}
                           onClick={(e) => showQrCode(branch, e)}
                         >
@@ -286,39 +286,38 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
       {/* Add New Branch */}
       <div className="lg:col-span-1">
         <div className="sticky top-6">
-          <Card className="border-none shadow-[0_8px_30px_-4px_rgba(212,147,10,0.1)] overflow-hidden">
-            <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-red-500 to-amber-400" />
-            <CardHeader className="pb-4">
+          <Card className="border border-gray-200 shadow-sm overflow-hidden">
+            <CardHeader className="pb-4 border-b border-gray-100 bg-gray-50/50">
               <CardTitle className="text-xl font-bold">Add New Branch</CardTitle>
               <CardDescription>Create a new registration portal for a dealership location.</CardDescription>
             </CardHeader>
             <CardContent>
               <form id="create-branch-form" action={handleCreate} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-gray-500">Branch Name</Label>
+                  <Label htmlFor="name" className="text-sm font-medium text-gray-700">Branch Name</Label>
                   <Input 
                     id="name" 
                     name="name" 
                     required 
                     placeholder="e.g. Nippon Toyota - Edappally" 
-                    className="h-11 bg-gray-50 border-gray-200 focus:bg-white transition-colors focus-visible:ring-amber-500"
+                    className="h-11 bg-white border-gray-200 focus-visible:ring-gray-400 transition-colors"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="location" className="text-xs font-bold uppercase tracking-wider text-gray-500">Location (Optional)</Label>
+                  <Label htmlFor="location" className="text-sm font-medium text-gray-700">Location (Optional)</Label>
                   <Input 
                     id="location" 
                     name="location" 
                     placeholder="e.g. Kochi, Kerala" 
-                    className="h-11 bg-gray-50 border-gray-200 focus:bg-white transition-colors focus-visible:ring-amber-500"
+                    className="h-11 bg-white border-gray-200 focus-visible:ring-gray-400 transition-colors"
                   />
                 </div>
                 <Button 
                   type="submit" 
-                  className={`w-full h-11 gap-2 font-bold shadow-md transition-all ${
+                  className={`w-full h-11 gap-2 font-medium shadow-sm transition-all ${
                     success 
-                      ? 'bg-green-600 hover:bg-green-700 text-white shadow-green-900/20' 
-                      : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 text-white hover:shadow-lg'
+                      ? 'bg-green-600 hover:bg-green-700 text-white' 
+                      : 'bg-gray-900 hover:bg-gray-800 text-white'
                   }`}
                   disabled={loading || success}
                 >
@@ -349,7 +348,7 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
           >
             <div className="bg-gray-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-6 border border-gray-800">
               <div className="flex items-center gap-3">
-                <div className="bg-amber-500 text-gray-900 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs">
+                <div className="bg-gray-100 text-gray-900 w-6 h-6 rounded-full flex items-center justify-center font-medium text-xs">
                   {selectedBranchIds.size}
                 </div>
                 <span className="font-medium text-sm">Branches Selected</span>

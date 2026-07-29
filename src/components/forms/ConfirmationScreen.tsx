@@ -42,7 +42,7 @@ export function ConfirmationScreen({
     })), [])
 
   return (
-    <div className="flex flex-col min-h-screen relative font-sans w-full max-w-[420px] mx-auto shadow-2xl overflow-hidden" style={{ background: 'linear-gradient(180deg,#FFF8E1 0%,#FFF3CD 60%,#FFECB3 100%)' }}>
+    <div className="flex flex-col min-h-screen relative font-sans w-full max-w-[420px] mx-auto shadow-2xl overflow-hidden" style={{ background: '#FFF4E1' }}>
       {/* Confetti */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
         {confetti.map(p => (
@@ -67,7 +67,7 @@ export function ConfirmationScreen({
         animate={{ y: 0, opacity: 1 }} 
         transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
         className="relative overflow-hidden" 
-        style={{ background: 'linear-gradient(160deg,#1A0005 0%,#6B0D1A 45%,#EB0A1E 100%)' }}
+        style={{ background: '#0E3A36' }}
       >
         <div className="h-9" />
         <div className="relative flex items-center justify-between px-5 pb-4">
@@ -85,7 +85,7 @@ export function ConfirmationScreen({
           </div>
         </div>
         <svg viewBox="0 0 390 22" className="w-full block" style={{ marginBottom: -1 }}>
-          <path d="M0,22 C65,4 130,20 195,10 C260,0 325,18 390,6 L390,22 Z" fill="#FFF8E1" />
+          <path d="M0,22 C65,4 130,20 195,10 C260,0 325,18 390,6 L390,22 Z" fill="#FFF4E1" />
         </svg>
       </motion.div>
 
@@ -134,14 +134,14 @@ export function ConfirmationScreen({
           transition={{ delay: 0.3, duration: 0.5 }}
           className="text-center px-5 mt-3"
         >
-          <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-1" style={{ color: '#D4930A' }}>
+          <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-1" style={{ color: '#F47C00' }}>
             Onam 2026
           </p>
           <h2 className="text-gray-900 text-[28px] font-black leading-tight">
             You're In! 🎉
           </h2>
           <p className="text-[13px] font-normal mt-1.5 leading-relaxed" style={{ color: '#78350F' }}>
-            Thank you, <span className="font-extrabold text-[#EB0A1E]">{name.split(' ')[0]}</span>!<br />
+            Thank you, <span className="font-extrabold text-[#0E3A36]">{name.split(' ')[0]}</span>!<br />
             Best of luck in the lucky draw.
           </p>
         </motion.div>
@@ -153,11 +153,11 @@ export function ConfirmationScreen({
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.6, type: "spring", bounce: 0.3 }}
         className="mx-4 mt-4 mb-4 rounded-3xl overflow-hidden shadow-2xl relative z-10" 
-        style={{ border: '1.5px solid #FDE68A' }}
+        style={{ border: '1.5px solid #FFD400' }}
       >
-        <div className="px-5 py-3.5 flex items-center justify-between" style={{ background: 'linear-gradient(90deg,#1A0005 0%,#EB0A1E 100%)' }}>
+        <div className="px-5 py-3.5 flex items-center justify-between" style={{ background: '#0E3A36' }}>
           <div>
-            <p className="text-[9px] font-bold tracking-[0.22em] uppercase" style={{ color: '#FFD700' }}>Entry Ticket</p>
+            <p className="text-[9px] font-bold tracking-[0.22em] uppercase" style={{ color: '#FFD400' }}>Entry Ticket</p>
             <p className="text-white text-[12px] font-semibold mt-0.5">Nippon Toyota Onam Lucky Draw</p>
           </div>
           <div className="pookalam-spin flex-shrink-0 relative" style={{ width: 36, height: 36 }}>
@@ -165,26 +165,26 @@ export function ConfirmationScreen({
           </div>
         </div>
 
-        <div className="flex items-center" style={{ background: '#FFFDF7' }}>
-          <div className="w-4 h-6 rounded-r-full -ml-px flex-shrink-0" style={{ background: '#FFF3CD', border: '1.5px solid #FDE68A', borderLeft: 'none' }} />
-          <div className="flex-1 mx-1" style={{ borderTop: '2px dashed #FDE68A' }} />
-          <div className="w-4 h-6 rounded-l-full -mr-px flex-shrink-0" style={{ background: '#FFF3CD', border: '1.5px solid #FDE68A', borderRight: 'none' }} />
+        <div className="flex items-center" style={{ background: '#ffffff' }}>
+          <div className="w-4 h-6 rounded-r-full -ml-px flex-shrink-0" style={{ background: '#FFF4E1', border: '1.5px solid #FFD400', borderLeft: 'none' }} />
+          <div className="flex-1 mx-1" style={{ borderTop: '2px dashed #FFD400' }} />
+          <div className="w-4 h-6 rounded-l-full -mr-px flex-shrink-0" style={{ background: '#FFF4E1', border: '1.5px solid #FFD400', borderRight: 'none' }} />
         </div>
 
-        <div className="px-5 pb-4 pt-3" style={{ background: '#FFFDF7' }}>
+        <div className="px-5 pb-4 pt-3" style={{ background: '#ffffff' }}>
           <div className="text-center mb-4">
             <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-2" style={{ color: '#9CA3AF' }}>Your Lucky Ticket</p>
             <div
               className="inline-block px-6 py-2.5 rounded-2xl"
-              style={{ background: 'linear-gradient(135deg,#FEF3C7,#FDE68A)', border: '1.5px solid #F59E0B' }}
+              style={{ background: '#FFD400', border: '1.5px solid #F47C00' }}
             >
-              <span className="text-[20px] font-black tracking-[0.05em] uppercase" style={{ color: '#92400E' }}>
+              <span className="text-[20px] font-black tracking-[0.05em] uppercase" style={{ color: '#0E3A36' }}>
                 {entryId.slice(0, 8)}
               </span>
             </div>
           </div>
 
-          <div className="h-px mb-4" style={{ background: '#FDE68A' }} />
+          <div className="h-px mb-4" style={{ background: '#FFD400' }} />
 
           <div className="space-y-3">
             {[
@@ -208,10 +208,10 @@ export function ConfirmationScreen({
           </div>
         </div>
 
-        <div className="px-5 py-3 flex items-center justify-center gap-2" style={{ background: '#FEF9C3' }}>
-          <Sparkle size={12} color="#D4930A" />
-          <p className="text-[11px] font-bold" style={{ color: '#92400E' }}>Save this screenshot for reference</p>
-          <Sparkle size={12} color="#D4930A" />
+        <div className="px-5 py-3 flex items-center justify-center gap-2" style={{ background: '#FFD400' }}>
+          <Sparkle size={12} color="#0E3A36" />
+          <p className="text-[11px] font-bold" style={{ color: '#0E3A36' }}>Save this screenshot for reference</p>
+          <Sparkle size={12} color="#0E3A36" />
         </div>
       </motion.div>
 
@@ -234,8 +234,8 @@ export function ConfirmationScreen({
               })
             }
           }}
-          className="w-full py-4 rounded-2xl text-[14px] font-extrabold text-white transition-transform shadow-lg shadow-red-900/20"
-          style={{ background: 'linear-gradient(135deg,#B30010,#EB0A1E)' }}
+          className="w-full py-4 rounded-2xl text-[14px] font-extrabold text-white transition-transform shadow-lg shadow-orange-900/20"
+          style={{ background: '#F47C00' }}
         >
           Share 🎊
         </motion.button>
