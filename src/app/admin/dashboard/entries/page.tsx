@@ -38,13 +38,23 @@ export default async function EntriesPage(props: {
     : {};
 
   const [branches, entries, totalEntries, flaggedCount] = await Promise.all([
-    prisma.branch.findMany({ orderBy: { name: "asc" } }),
+    prisma.branch.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    }),
     prisma.entry.findMany({
       where: whereClause,
-      include: {
-        branch: true,
-        model: true,
-        colour: true,
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        vin: true,
+        flag: true,
+        excluded: true,
+        createdAt: true,
+        branchId: true,
+        model: { select: { name: true } },
+        colour: { select: { name: true } },
       },
       orderBy: { createdAt: "desc" },
       take: PAGE_SIZE,
@@ -61,7 +71,7 @@ export default async function EntriesPage(props: {
       branch,
       entries: entries.filter((e) => e.branchId === branch.id),
     }))
-    .filter((group) => search === "" || group.entries.length > 0);
+    .filter((group) => group.entries.length > 0);
 
   const pageHref = (p: number) =>
     `?page=${p}${search ? `&search=${encodeURIComponent(search)}` : ""}`;
