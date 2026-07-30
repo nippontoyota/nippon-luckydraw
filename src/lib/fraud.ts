@@ -10,12 +10,13 @@ export enum FraudFlag {
 
 export async function assessEntry(data: EntryInput, ip: string, branchId: string): Promise<FraudFlag[]> {
   const flags: FraudFlag[] = [];
+  const normalizedPhone = `+91${data.phone}`;
 
   // 1. MULTI_BRANCH_PHONE: Same phone submitted to different branch in last 5 mins
   const fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000);
   const recentPhoneEntries = await prisma.entry.findMany({
     where: {
-      phone: data.phone,
+      phone: normalizedPhone,
       createdAt: { gte: fiveMinsAgo },
     },
   });
@@ -39,7 +40,7 @@ export async function assessEntry(data: EntryInput, ip: string, branchId: string
     },
   });
   const uniquePhonesFromIp = new Set(recentIpEntries.map((e) => e.phone));
-  if (uniquePhonesFromIp.size >= 2 && !uniquePhonesFromIp.has(data.phone)) {
+  if (uniquePhonesFromIp.size >= 2 && !uniquePhonesFromIp.has(normalizedPhone)) {
     flags.push(FraudFlag.MULTI_PHONE_DEVICE);
   }
 
