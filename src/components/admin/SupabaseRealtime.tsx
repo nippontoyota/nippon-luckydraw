@@ -1,48 +1,43 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
-// Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-// We only initialize it if the keys are present to prevent crashes in environments without them
-const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+const supabase =
+  supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
 export function SupabaseRealtime() {
   const router = useRouter();
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!supabase) {
-      console.warn("Supabase Realtime not initialized: Missing credentials.");
-      return;
-    }
+    if (!supabase) return;
 
-    // Subscribe to all changes on the 'entries' table
+    const scheduleRefresh = () => {
+      if (timer.current) clearTimeout(timer.current);
+      // Burst of inserts → one refresh, not N
+      timer.current = setTimeout(() => router.refresh(), 400);
+    };
+
     const entriesSubscription = supabase
       .channel("realtime-entries")
-      .on("postgres_changes", { event: "*", schema: "public", table: "entries" }, (payload) => {
-        console.log("Realtime event received for entries:", payload);
-        router.refresh();
-      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "entries" }, scheduleRefresh)
       .subscribe();
 
-    // Subscribe to all changes on the 'branches' table
     const branchesSubscription = supabase
       .channel("realtime-branches")
-      .on("postgres_changes", { event: "*", schema: "public", table: "branches" }, (payload) => {
-        console.log("Realtime event received for branches:", payload);
-        router.refresh();
-      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "branches" }, scheduleRefresh)
       .subscribe();
 
     return () => {
+      if (timer.current) clearTimeout(timer.current);
       supabase.removeChannel(entriesSubscription);
       supabase.removeChannel(branchesSubscription);
     };
   }, [router]);
 
-  return null; // This is a headless component that just manages websocket subscriptions
+  return null;
 }

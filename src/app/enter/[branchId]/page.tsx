@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { EntryForm } from "@/components/forms/EntryForm";
 
-export const revalidate = 60; // Cache this page for 60 seconds (ISR)
+export const revalidate = 300; // models/branches rarely change
 
 export default async function EnterPage(
   props: {
@@ -10,19 +10,19 @@ export default async function EnterPage(
   }
 ) {
   const params = await props.params;
-  
-  // Parallelize DB queries
+
   const [branch, modelsData] = await Promise.all([
     prisma.branch.findUnique({
       where: { id: params.branchId },
+      select: { id: true, name: true },
     }),
     prisma.model.findMany({
-      include: {
-        colours: true,
+      select: {
+        id: true,
+        name: true,
+        colours: { select: { id: true, name: true } },
       },
-      orderBy: {
-        name: "asc",
-      },
+      orderBy: { name: "asc" },
     }),
   ]);
 
@@ -33,7 +33,7 @@ export default async function EnterPage(
   const models = modelsData.map((m) => ({
     id: m.id,
     name: m.name,
-    colours: m.colours.map((c) => ({ id: c.id, name: c.name })),
+    colours: m.colours,
   }));
 
   return (
