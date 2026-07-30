@@ -40,6 +40,9 @@ export async function drawWinner(branchId: string, forceRerun = false) {
         excluded: false,
         winner: null,
       },
+      select: {
+        id: true,
+      },
     });
 
     if (eligibleEntries.length < 3) {

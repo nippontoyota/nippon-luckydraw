@@ -11,82 +11,76 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div 
-      className="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 font-sans relative overflow-hidden"
-      style={{ background: 'linear-gradient(180deg,#FFF8E1 0%,#FFF3CD 60%,#FFECB3 100%)' }}
-    >
-      <div className="w-full max-w-[360px] space-y-8 relative z-10">
+    <div className="min-h-dvh flex flex-col items-center justify-center py-12 px-4 bg-gray-50 font-sans">
+      <div className="w-full max-w-[360px] space-y-8">
         <div className="text-center space-y-3">
-          <img 
-            src="https://dealer.toyotabharat.com/dealerV11/images/common/favicon.ico" 
-            alt="Nippon Toyota Favicon" 
-            className="w-10 h-10 mx-auto drop-shadow-md"
+          <img
+            src="https://dealer.toyotabharat.com/dealerV11/images/common/favicon.ico"
+            alt=""
+            className="w-9 h-9 mx-auto"
           />
           <div>
-            <div className="text-[11px] font-bold tracking-[0.2em] text-[#92400E] uppercase mb-1">
-              Nippon Toyota
-            </div>
-            <h1 className="text-2xl font-black tracking-tight text-gray-900">
-              Admin Sign In
-            </h1>
+            <p className="text-xs font-medium tracking-wide text-gray-500 mb-1">Nippon Toyota</p>
+            <h1 className="text-xl font-semibold tracking-tight text-gray-900">Admin sign in</h1>
+            <p className="text-sm text-gray-600 mt-1">Lucky draw management</p>
           </div>
         </div>
-        
-        <div 
-          className="bg-white rounded-[24px] p-6 sm:p-8"
-          style={{
-            border: '1.5px solid rgba(245,166,35,0.3)',
-            boxShadow: '0 8px 40px rgba(212,147,10,0.18), 0 2px 8px rgba(0,0,0,0.08)',
-          }}
-        >
-          <form action={formAction} className="space-y-5">
+
+        <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+          <form action={formAction} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[11px] font-bold tracking-[0.12em] uppercase" style={{ color: '#92400E' }}>Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                Email
+              </Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 required
-                className="h-11 text-[14px] font-medium rounded-xl border-2 border-amber-200 focus:border-[#EB0A1E] focus:shadow-[0_0_0_3px_rgba(235,10,30,0.12)] transition-all bg-white outline-none"
+                autoComplete="email"
+                className="h-10 text-sm"
                 placeholder="admin@nippontoyota.com"
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-[11px] font-bold tracking-[0.12em] uppercase" style={{ color: '#92400E' }}>Password</Label>
+              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                Password
+              </Label>
               <div className="relative">
                 <Input
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
-                  className="h-11 text-[14px] font-medium rounded-xl border-2 border-amber-200 focus:border-[#EB0A1E] focus:shadow-[0_0_0_3px_rgba(235,10,30,0.12)] transition-all bg-white outline-none pr-10"
+                  autoComplete="current-password"
+                  className="h-10 text-sm pr-10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-700/60 hover:text-amber-900 focus:outline-none transition-colors"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 p-1 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
             {state?.error && (
-              <div className="text-[13px] text-[#DC2626] font-medium bg-red-50 p-3 rounded-lg border border-red-200 flex items-center gap-1.5">
-                <span>⚠</span> {state.error}
+              <div
+                className="text-sm text-red-700 font-medium bg-red-50 p-3 rounded-lg border border-red-200"
+                role="alert"
+              >
+                {state.error}
               </div>
             )}
 
             <button
               type="submit"
               disabled={isPending}
-              className="btn-glow w-full py-3.5 mt-2 rounded-xl text-white text-[14px] font-extrabold tracking-widest uppercase transition-transform active:scale-[0.97]"
-              style={{ 
-                background: 'linear-gradient(135deg,#B30010 0%,#EB0A1E 55%,#FF3347 100%)', 
-                opacity: isPending ? 0.8 : 1 
-              }}
+              className="w-full h-10 mt-1 rounded-lg text-white text-sm font-semibold bg-gray-900 hover:bg-gray-800 transition-colors disabled:opacity-70"
             >
-              {isPending ? "Signing in..." : "Sign in →"}
+              {isPending ? "Signing in…" : "Sign in"}
             </button>
           </form>
         </div>

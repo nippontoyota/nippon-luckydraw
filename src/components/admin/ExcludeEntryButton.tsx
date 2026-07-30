@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { toggleExclude } from "@/app/actions/entry";
-import { EyeOff, Eye } from "lucide-react";
+import { Ban, CheckCircle2 } from "lucide-react";
 
 export function ExcludeEntryButton({ id, excluded }: { id: string; excluded: boolean }) {
   const [isExcluded, setIsExcluded] = useState(excluded);
@@ -19,19 +19,26 @@ export function ExcludeEntryButton({ id, excluded }: { id: string; excluded: boo
 
   return (
     <button
+      type="button"
       onClick={handleToggle}
       disabled={isPending}
-      title={isExcluded ? "Re-include in draw" : "Exclude from draw"}
-      className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-semibold transition-all disabled:opacity-50 ${
+      title={isExcluded ? "Put back in the draw" : "Remove from the draw"}
+      className={`inline-flex items-center gap-1 px-2 py-1.5 rounded-md text-[11px] font-semibold transition-colors disabled:opacity-50 min-h-8 ${
         isExcluded
-          ? "bg-gray-100 text-gray-500 hover:bg-orange-100 hover:text-orange-700"
-          : "bg-white text-gray-400 hover:bg-gray-100 hover:text-gray-700 border border-gray-200"
+          ? "bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100"
+          : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:text-gray-900"
       }`}
     >
       {isExcluded ? (
-        <><EyeOff className="w-3 h-3" /> Excluded</>
+        <>
+          <CheckCircle2 className="w-3 h-3 shrink-0" />
+          Include
+        </>
       ) : (
-        <><Eye className="w-3 h-3" /> Exclude</>
+        <>
+          <Ban className="w-3 h-3 shrink-0" />
+          Exclude
+        </>
       )}
     </button>
   );

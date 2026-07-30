@@ -10,11 +10,11 @@ export default async function ModelsPage() {
   });
 
   return (
-    <div className="space-y-6 pb-10">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Models & Colours</h1>
-        <p className="text-muted-foreground mt-1">
-          Manage the Toyota vehicle models and colour options available on the entry form.
+    <div className="space-y-6">
+      <div className="min-w-0">
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Models & colours</h1>
+        <p className="text-sm text-gray-600 mt-1 max-w-xl">
+          These options appear on the customer entry form. Expand a model to manage its colours.
         </p>
       </div>
 

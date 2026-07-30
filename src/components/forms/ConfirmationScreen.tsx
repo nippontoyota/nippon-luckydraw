@@ -73,7 +73,7 @@ export function ConfirmationScreen({
         <div className="relative flex items-center justify-between px-5 pb-4">
           <div className="flex items-center gap-2.5">
             <div className="relative h-8 w-8">
-              <Image src="/images/logo_for_customer_facing.png" alt="Toyota Emblem" fill sizes="32px" className="object-contain" priority />
+              <Image src="/images/logo_for_customer_facing.webp" alt="Toyota Emblem" fill sizes="32px" className="object-contain" priority />
             </div>
             <div className="flex flex-col justify-center">
               <p className="text-white text-[16px] font-black tracking-[0.15em] leading-tight uppercase">NIPPON</p>
@@ -81,7 +81,7 @@ export function ConfirmationScreen({
             </div>
           </div>
           <div className="pookalam-spin opacity-90 flex-shrink-0 relative" style={{ width: 64, height: 64 }}>
-            <Image src="/images/pookalam.png" alt="Onam pookalam" fill sizes="64px" className="object-cover" priority />
+            <Image src="/images/pookalam.webp" alt="Onam pookalam" fill sizes="64px" className="object-cover" priority />
           </div>
         </div>
         <svg viewBox="0 0 390 22" className="w-full block" style={{ marginBottom: -1 }}>
@@ -103,7 +103,7 @@ export function ConfirmationScreen({
             className="relative flex-shrink-0"
           >
             <div style={{ width: 88, height: 88, position: 'relative' }}>
-              <Image src="/images/pookalam.png" alt="" fill sizes="88px" className="object-cover opacity-80" priority />
+              <Image src="/images/pookalam.webp" alt="" fill sizes="88px" className="object-cover opacity-80" priority />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div
                   className="w-12 h-12 rounded-full flex items-center justify-center shadow-xl"
@@ -161,7 +161,7 @@ export function ConfirmationScreen({
             <p className="text-white text-[12px] font-semibold mt-0.5">Nippon Toyota Onam Lucky Draw</p>
           </div>
           <div className="pookalam-spin flex-shrink-0 relative" style={{ width: 36, height: 36 }}>
-            <Image src="/images/pookalam.png" alt="" fill sizes="36px" className="object-cover" />
+            <Image src="/images/pookalam.webp" alt="" fill sizes="36px" className="object-cover" />
           </div>
         </div>
 

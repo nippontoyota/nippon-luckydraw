@@ -7,8 +7,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { QrCode, Plus, Trash2, MapPin, Link as LinkIcon, Users, AlertTriangle, Download, Check, X, CheckSquare, Square } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  QrCode,
+  Plus,
+  Trash2,
+  MapPin,
+  Link as LinkIcon,
+  Users,
+  AlertTriangle,
+  Download,
+  Check,
+} from "lucide-react";
 
 interface Branch {
   id: string;
@@ -20,18 +29,22 @@ interface Branch {
   };
 }
 
-export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUrl: string }) {
+export function BranchesClient({ branches, appUrl }: { branches: Branch[]; appUrl: string }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const submittingRef = useRef(false);
-  
-  // Selection state
+
   const [selectedBranchIds, setSelectedBranchIds] = useState<Set<string>>(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
   const [bulkDeleteModal, setBulkDeleteModal] = useState(false);
-  
-  const [qrModal, setQrModal] = useState<{ isOpen: boolean; url: string; dataUrl: string; branchName: string }>({
+
+  const [qrModal, setQrModal] = useState<{
+    isOpen: boolean;
+    url: string;
+    dataUrl: string;
+    branchName: string;
+  }>({
     isOpen: false,
     url: "",
     dataUrl: "",
@@ -42,19 +55,19 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
     isOpen: false,
     branch: null,
   });
-  
+
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
   const handleCreate = async (formData: FormData) => {
     if (submittingRef.current) return;
-    
+
     submittingRef.current = true;
     setLoading(true);
     setSuccess(false);
-    
+
     try {
       const result = await createBranch(formData);
-      
+
       if (result?.error) {
         alert(result.error);
       } else {
@@ -81,10 +94,9 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
       } else {
         setDeleteModal({ isOpen: false, branch: null });
         setDeleteConfirmText("");
-        // Remove from selection if deleted
-        const newSelection = new Set(selectedBranchIds);
-        newSelection.delete(branch.id);
-        setSelectedBranchIds(newSelection);
+        const next = new Set(selectedBranchIds);
+        next.delete(branch.id);
+        setSelectedBranchIds(next);
       }
     } finally {
       setDeletingId(null);
@@ -109,8 +121,7 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
     }
   };
 
-  const toggleSelection = (id: string, e?: React.MouseEvent) => {
-    e?.stopPropagation();
+  const toggleSelection = (id: string) => {
     const next = new Set(selectedBranchIds);
     if (next.has(id)) next.delete(id);
     else next.add(id);
@@ -121,12 +132,11 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
     if (selectedBranchIds.size === branches.length) {
       setSelectedBranchIds(new Set());
     } else {
-      setSelectedBranchIds(new Set(branches.map(b => b.id)));
+      setSelectedBranchIds(new Set(branches.map((b) => b.id)));
     }
   };
 
-  const showQrCode = async (branch: Branch, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const showQrCode = async (branch: Branch) => {
     const origin = typeof window !== "undefined" ? window.location.origin : appUrl;
     const url = `${origin}/enter/${branch.id}`;
     try {
@@ -142,8 +152,7 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
     }
   };
 
-  const openDeleteModal = (branch: Branch, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const openDeleteModal = (branch: Branch) => {
     setDeleteConfirmText("");
     setDeleteModal({ isOpen: true, branch });
   };
@@ -153,171 +162,167 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
     setBulkDeleteModal(true);
   };
 
-  // Single delete computation
   const entriesCount = deleteModal.branch?._count?.entries || 0;
   const isDeleteButtonDisabled = entriesCount > 0 && deleteConfirmText !== "delete this branch";
 
-  // Bulk delete computation
-  const branchesToDelete = branches.filter(b => selectedBranchIds.has(b.id));
+  const branchesToDelete = branches.filter((b) => selectedBranchIds.has(b.id));
   const bulkEntriesCount = branchesToDelete.reduce((sum, b) => sum + (b._count?.entries || 0), 0);
-  const isBulkDeleteButtonDisabled = bulkEntriesCount > 0 && deleteConfirmText !== "delete these branches";
+  const isBulkDeleteButtonDisabled =
+    bulkEntriesCount > 0 && deleteConfirmText !== "delete these branches";
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative pb-20 lg:pb-0">
-      {/* Branches List */}
-      <div className="lg:col-span-2 space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h2 className="text-xl font-bold text-gray-900 tracking-tight">Active Branches</h2>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative pb-24 lg:pb-0">
+      <div className="lg:col-span-2 space-y-4 min-w-0">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <h2 className="text-base font-semibold text-gray-900">
+              Branches
+              <span className="ml-2 text-sm font-normal text-gray-500">{branches.length}</span>
+            </h2>
             {branches.length > 0 && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <button
+                type="button"
                 onClick={toggleSelectAll}
-                className="text-gray-500 hover:text-gray-900 px-2 h-8 font-semibold text-xs transition-colors"
+                className="text-xs font-medium text-gray-500 hover:text-gray-900 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors"
               >
-                {selectedBranchIds.size === branches.length ? "Deselect All" : "Select All"}
-              </Button>
+                {selectedBranchIds.size === branches.length ? "Deselect all" : "Select all"}
+              </button>
             )}
           </div>
-          <span className="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full border border-amber-200 shadow-sm">
-            {branches.length} Branches
-          </span>
         </div>
-        
-        <div className="grid gap-4">
-          <AnimatePresence mode="popLayout">
-            {branches.length === 0 ? (
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                exit={{ opacity: 0 }}
-                className="p-8 text-center bg-white/50 border border-dashed border-gray-300 rounded-2xl"
-              >
-                <p className="text-gray-500 font-medium">No branches created yet. Create one to get started!</p>
-              </motion.div>
-            ) : (
-              branches.map((branch) => {
-                const isSelected = selectedBranchIds.has(branch.id);
-                return (
-                  <motion.div 
-                    key={branch.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                    transition={{ duration: 0.2 }}
+
+        <div className="space-y-2">
+          {branches.length === 0 ? (
+            <div className="p-10 text-center bg-white border border-dashed border-gray-300 rounded-xl">
+              <p className="text-sm font-medium text-gray-900">No branches yet</p>
+              <p className="text-sm text-gray-600 mt-1">
+                Create a branch to get a unique entry link and QR code.
+              </p>
+            </div>
+          ) : (
+            branches.map((branch) => {
+              const isSelected = selectedBranchIds.has(branch.id);
+              const entryCount = branch._count?.entries ?? 0;
+
+              return (
+                <div
+                  key={branch.id}
+                  className={`bg-white rounded-xl p-4 transition-colors border flex items-start sm:items-center gap-3 min-w-0 ${
+                    isSelected
+                      ? "border-gray-900 bg-gray-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <button
+                    type="button"
                     onClick={() => toggleSelection(branch.id)}
-                    className={`bg-white rounded-2xl p-5 transition-all cursor-pointer group relative overflow-hidden flex items-stretch gap-4 ${
-                      isSelected 
-                        ? 'border-2 border-gray-900 shadow-sm bg-gray-50/50' 
-                        : 'border-2 border-transparent shadow-sm hover:border-gray-200'
+                    aria-label={isSelected ? `Deselect ${branch.name}` : `Select ${branch.name}`}
+                    aria-pressed={isSelected}
+                    className={`mt-0.5 sm:mt-0 w-5 h-5 rounded border flex items-center justify-center shrink-0 transition-colors ${
+                      isSelected
+                        ? "bg-gray-900 border-gray-900 text-white"
+                        : "border-gray-300 text-transparent hover:border-gray-500"
                     }`}
                   >
-                    <div className={`absolute top-0 left-0 w-1 h-full transition-all duration-300 ${isSelected ? 'bg-gray-900 opacity-100' : 'bg-gray-200 opacity-0 group-hover:opacity-100'}`} />
-                    
-                    {/* Checkbox Column */}
-                    <div className="flex items-center justify-center pt-1">
-                      <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
-                        isSelected 
-                          ? 'bg-gray-900 border-gray-900 text-white' 
-                          : 'border-gray-300 text-transparent group-hover:border-gray-400'
-                      }`}>
-                        <Check size={14} className="stroke-[3]" />
+                    <Check size={12} className="stroke-[3]" />
+                  </button>
+
+                  <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="min-w-0 space-y-1">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <h3 className="text-sm font-semibold text-gray-900 truncate" title={branch.name}>
+                          {branch.name}
+                        </h3>
+                        {entryCount > 0 && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded shrink-0">
+                            <Users size={10} />
+                            {entryCount}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                        <span className="inline-flex items-center gap-1 min-w-0 max-w-full">
+                          <MapPin size={12} className="shrink-0 text-gray-400" />
+                          <span className="truncate">{branch.location || "No location"}</span>
+                        </span>
+                        <span className="inline-flex items-center gap-1 min-w-0 max-w-full">
+                          <LinkIcon size={12} className="shrink-0 text-gray-400" />
+                          <span className="font-mono truncate text-gray-600" title={branch.id}>
+                            /{branch.id.slice(0, 8)}…
+                          </span>
+                        </span>
                       </div>
                     </div>
 
-                    {/* Content Column */}
-                    <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                          <h3 className="text-lg font-bold text-gray-900 leading-none">{branch.name}</h3>
-                          {branch._count && branch._count.entries > 0 && (
-                            <span className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider bg-red-50 text-red-700 px-2 py-0.5 rounded-full border border-red-100">
-                              <Users size={12} /> {branch._count.entries}
-                            </span>
-                          )}
-                        </div>
-                        
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-medium">
-                          <div className="flex items-center gap-1.5">
-                            <MapPin size={14} className="text-amber-500" />
-                            {branch.location || "No location set"}
-                          </div>
-                          <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-                            <LinkIcon size={14} className="text-amber-500" />
-                            <span className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">/{branch.id}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className={`gap-2 h-9 transition-colors shadow-sm ${
-                            isSelected 
-                              ? 'border-gray-300 text-gray-800 bg-white hover:bg-gray-100' 
-                              : 'border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-800'
-                          }`}
-                          onClick={(e) => showQrCode(branch, e)}
-                        >
-                          <QrCode className="w-4 h-4" />
-                          QR Code
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-9 w-9 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                          onClick={(e) => openDeleteModal(branch, e)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 h-8"
+                        onClick={() => showQrCode(branch)}
+                      >
+                        <QrCode className="w-3.5 h-3.5" />
+                        QR code
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="text-gray-400 hover:text-red-600 hover:bg-red-50"
+                        onClick={() => openDeleteModal(branch)}
+                        aria-label={`Delete ${branch.name}`}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
-                  </motion.div>
-                )
-              })
-            )}
-          </AnimatePresence>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
 
-      {/* Add New Branch */}
-      <div className="lg:col-span-1">
-        <div className="sticky top-6">
+      <div className="lg:col-span-1 min-w-0">
+        <div className="lg:sticky lg:top-6">
           <Card className="border border-gray-200 shadow-sm overflow-hidden">
-            <CardHeader className="pb-4 border-b border-gray-100 bg-gray-50/50">
-              <CardTitle className="text-xl font-bold">Add New Branch</CardTitle>
-              <CardDescription>Create a new registration portal for a dealership location.</CardDescription>
+            <CardHeader className="pb-3 border-b border-gray-100 bg-gray-50/80">
+              <CardTitle className="text-base font-semibold">Add branch</CardTitle>
+              <CardDescription>
+                Each branch gets its own entry form URL and QR code for the showroom.
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <form id="create-branch-form" action={handleCreate} className="space-y-5">
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-medium text-gray-700">Branch Name</Label>
-                  <Input 
-                    id="name" 
-                    name="name" 
-                    required 
-                    placeholder="e.g. Nippon Toyota - Edappally" 
-                    className="h-11 bg-white border-gray-200 focus-visible:ring-gray-400 transition-colors"
+            <CardContent className="pt-4">
+              <form id="create-branch-form" action={handleCreate} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                    Branch name
+                  </Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    required
+                    placeholder="e.g. Edappally"
+                    className="h-10 bg-white border-gray-200"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="location" className="text-sm font-medium text-gray-700">Location (Optional)</Label>
-                  <Input 
-                    id="location" 
-                    name="location" 
-                    placeholder="e.g. Kochi, Kerala" 
-                    className="h-11 bg-white border-gray-200 focus-visible:ring-gray-400 transition-colors"
+                <div className="space-y-1.5">
+                  <Label htmlFor="location" className="text-sm font-medium text-gray-700">
+                    Location <span className="text-gray-400 font-normal">(optional)</span>
+                  </Label>
+                  <Input
+                    id="location"
+                    name="location"
+                    placeholder="e.g. Kochi, Kerala"
+                    className="h-10 bg-white border-gray-200"
                   />
                 </div>
-                <Button 
-                  type="submit" 
-                  className={`w-full h-11 gap-2 font-medium shadow-sm transition-all ${
-                    success 
-                      ? 'bg-green-600 hover:bg-green-700 text-white' 
-                      : 'bg-gray-900 hover:bg-gray-800 text-white'
+                <Button
+                  type="submit"
+                  className={`w-full h-10 gap-2 text-white ${
+                    success
+                      ? "bg-emerald-600 hover:bg-emerald-700"
+                      : "bg-gray-900 hover:bg-gray-800"
                   }`}
                   disabled={loading || success}
                 >
@@ -328,7 +333,7 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
                   ) : (
                     <Plus className="w-4 h-4" />
                   )}
-                  {loading ? "Creating..." : success ? "Branch Created!" : "Create Branch"}
+                  {loading ? "Creating…" : success ? "Created" : "Create branch"}
                 </Button>
               </form>
             </CardContent>
@@ -336,294 +341,251 @@ export function BranchesClient({ branches, appUrl }: { branches: Branch[], appUr
         </div>
       </div>
 
-      {/* Floating Bulk Action Bar */}
-      <AnimatePresence>
-        {selectedBranchIds.size > 0 && (
-          <motion.div 
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40"
+      {selectedBranchIds.size > 0 && (
+        <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-md">
+          <div className="bg-gray-900 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 border border-gray-800">
+            <div className="bg-white text-gray-900 min-w-6 h-6 px-1.5 rounded-full flex items-center justify-center font-semibold text-xs shrink-0">
+              {selectedBranchIds.size}
+            </div>
+            <span className="font-medium text-sm flex-1 truncate">selected</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelectedBranchIds(new Set())}
+              className="text-gray-300 hover:text-white hover:bg-gray-800 h-8"
+            >
+              Cancel
+            </Button>
+            <Button size="sm" variant="destructive" onClick={openBulkDeleteModal} className="gap-1.5 h-8 shrink-0">
+              <Trash2 size={14} />
+              Delete
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {qrModal.isOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
+          onClick={() => setQrModal({ ...qrModal, isOpen: false })}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="qr-modal-title"
+        >
+          <div
+            className="bg-white rounded-xl w-full max-w-sm overflow-hidden shadow-xl border border-gray-200"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-gray-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-6 border border-gray-800">
-              <div className="flex items-center gap-3">
-                <div className="bg-gray-100 text-gray-900 w-6 h-6 rounded-full flex items-center justify-center font-medium text-xs">
-                  {selectedBranchIds.size}
-                </div>
-                <span className="font-medium text-sm">Branches Selected</span>
+            <div className="p-5 text-center border-b border-gray-100">
+              <h3 id="qr-modal-title" className="text-lg font-semibold text-gray-900 truncate px-2">
+                {qrModal.branchName}
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">Scan to open the entry form</p>
+            </div>
+            <div className="p-5 flex flex-col items-center">
+              <div className="bg-white p-2 rounded-lg border border-gray-100 mb-4">
+                <img src={qrModal.dataUrl} alt={`QR code for ${qrModal.branchName}`} className="w-56 h-56 object-contain" />
               </div>
-              <div className="w-px h-6 bg-gray-700" />
-              <div className="flex items-center gap-3">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setSelectedBranchIds(new Set())}
-                  className="text-gray-400 hover:text-white hover:bg-gray-800"
+              <p className="w-full p-2.5 bg-gray-50 rounded-lg border border-gray-100 mb-4 text-xs text-center font-mono break-all text-gray-600">
+                {qrModal.url}
+              </p>
+              <div className="flex w-full gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1 h-10 gap-2"
+                  onClick={() => {
+                    const link = document.createElement("a");
+                    link.href = qrModal.dataUrl;
+                    link.download = `${qrModal.branchName.replace(/[^a-z0-9]/gi, "_").toLowerCase()}_qr.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
                 >
-                  Cancel
+                  <Download size={16} />
+                  Download
                 </Button>
-                <Button 
-                  size="sm" 
-                  variant="destructive"
-                  onClick={openBulkDeleteModal}
-                  className="gap-2 shadow-lg"
+                <Button
+                  className="flex-1 h-10 bg-gray-900 text-white hover:bg-gray-800"
+                  onClick={() => setQrModal({ ...qrModal, isOpen: false })}
                 >
-                  <Trash2 size={14} />
-                  Delete Selected
+                  Done
                 </Button>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
 
-      {/* QR Code Modal */}
-      <AnimatePresence>
-        {qrModal.isOpen && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
-            onClick={() => setQrModal({ ...qrModal, isOpen: false })}
+      {deleteModal.isOpen && deleteModal.branch && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/40"
+          onClick={() => {
+            if (!deletingId) {
+              setDeleteModal({ isOpen: false, branch: null });
+              setDeleteConfirmText("");
+            }
+          }}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="bg-white rounded-xl w-full max-w-md shadow-xl border border-gray-200 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border border-white/20"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-6 text-center pb-0">
-                <h3 className="text-2xl font-black text-gray-900 tracking-tight">{qrModal.branchName}</h3>
-                <p className="text-sm text-gray-500 mt-1 font-medium">Scan to enter lucky draw</p>
-              </div>
-              <div className="p-6 flex flex-col items-center">
-                <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                  <img src={qrModal.dataUrl} alt="QR Code" className="w-64 h-64 object-contain" />
+            <div className="p-5">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                  <AlertTriangle className="w-4 h-4 text-red-600" />
                 </div>
-                <div className="w-full p-3 bg-gray-50 rounded-xl border border-gray-100 mb-6">
-                  <p className="text-xs text-center font-mono break-all text-gray-600">
-                    {qrModal.url}
+                <div className="min-w-0">
+                  <h3 className="text-base font-semibold text-gray-900">Delete branch</h3>
+                  <p className="text-sm text-gray-500 truncate" title={deleteModal.branch.name}>
+                    {deleteModal.branch.name}
                   </p>
                 </div>
-                <div className="flex w-full gap-3">
-                  <Button 
-                    variant="outline"
-                    className="flex-1 h-12 rounded-xl font-bold gap-2"
-                    onClick={() => {
-                      const link = document.createElement('a');
-                      link.href = qrModal.dataUrl;
-                      link.download = `${qrModal.branchName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_qr.png`;
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                    }}
-                  >
-                    <Download size={18} />
-                    Download
-                  </Button>
-                  <Button 
-                    className="flex-1 h-12 rounded-xl font-bold bg-gray-900 text-white hover:bg-gray-800 transition-colors"
-                    onClick={() => setQrModal({ ...qrModal, isOpen: false })}
-                  >
-                    Done
-                  </Button>
-                </div>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* Single Delete Modal */}
-      <AnimatePresence>
-        {deleteModal.isOpen && deleteModal.branch && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/40 backdrop-blur-sm"
-            onClick={() => {
-              if (!deletingId) {
-                setDeleteModal({ isOpen: false, branch: null });
-                setDeleteConfirmText("");
-              }
-            }}
+              {entriesCount > 0 ? (
+                <div className="space-y-3">
+                  <div className="bg-red-50 border border-red-100 p-3 rounded-lg">
+                    <p className="text-sm text-red-800 leading-relaxed">
+                      This branch has <strong>{entriesCount}</strong>{" "}
+                      {entriesCount === 1 ? "entry" : "entries"}. Deleting it removes those entries
+                      and any winners. This cannot be undone.
+                    </p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-medium text-gray-700">
+                      Type{" "}
+                      <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-red-700 select-all">
+                        delete this branch
+                      </span>{" "}
+                      to confirm
+                    </Label>
+                    <Input
+                      value={deleteConfirmText}
+                      onChange={(e) => setDeleteConfirmText(e.target.value)}
+                      className="h-10 font-mono text-sm"
+                      placeholder="delete this branch"
+                      autoComplete="off"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  No entries on this branch. Safe to delete.
+                </p>
+              )}
+            </div>
+
+            <div className="bg-gray-50 px-5 py-3 flex gap-2 justify-end border-t border-gray-100">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setDeleteModal({ isOpen: false, branch: null });
+                  setDeleteConfirmText("");
+                }}
+                disabled={!!deletingId}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDelete}
+                disabled={isDeleteButtonDisabled || !!deletingId}
+              >
+                {deletingId ? "Deleting…" : "Delete branch"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {bulkDeleteModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/40"
+          onClick={() => {
+            if (!bulkDeleting) {
+              setBulkDeleteModal(false);
+              setDeleteConfirmText("");
+            }
+          }}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="bg-white rounded-xl w-full max-w-md shadow-xl border border-gray-200 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              className="bg-white rounded-2xl w-full max-w-md shadow-2xl border border-red-100 overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                    <AlertTriangle className="w-5 h-5 text-red-600" />
+            <div className="p-5">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                  <AlertTriangle className="w-4 h-4 text-red-600" />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-gray-900">
+                    Delete {selectedBranchIds.size} branches
+                  </h3>
+                  <p className="text-sm text-gray-500">Bulk delete</p>
+                </div>
+              </div>
+
+              {bulkEntriesCount > 0 ? (
+                <div className="space-y-3">
+                  <div className="bg-red-50 border border-red-100 p-3 rounded-lg">
+                    <p className="text-sm text-red-800 leading-relaxed">
+                      These branches hold <strong>{bulkEntriesCount}</strong>{" "}
+                      {bulkEntriesCount === 1 ? "entry" : "entries"} total. Deleting removes
+                      entries and winners. This cannot be undone.
+                    </p>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900">Delete Branch</h3>
-                    <p className="text-sm font-medium text-gray-500">{deleteModal.branch.name}</p>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-medium text-gray-700">
+                      Type{" "}
+                      <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-red-700 select-all">
+                        delete these branches
+                      </span>{" "}
+                      to confirm
+                    </Label>
+                    <Input
+                      value={deleteConfirmText}
+                      onChange={(e) => setDeleteConfirmText(e.target.value)}
+                      className="h-10 font-mono text-sm"
+                      placeholder="delete these branches"
+                      autoComplete="off"
+                    />
                   </div>
                 </div>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  None of these branches have entries. Safe to delete.
+                </p>
+              )}
+            </div>
 
-                {entriesCount > 0 ? (
-                  <div className="space-y-4">
-                    <div className="bg-red-50 border border-red-100 p-4 rounded-xl">
-                      <p className="text-sm text-red-800 font-medium leading-relaxed">
-                        This branch currently has <strong className="font-black text-red-900">{entriesCount} active {entriesCount === 1 ? 'entry' : 'entries'}</strong>. 
-                        Deleting this branch will permanently destroy all entries and winners associated with it. This action cannot be undone.
-                      </p>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label className="text-xs font-bold text-gray-700">
-                        To verify, type <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-red-600 select-all">delete this branch</span> below:
-                      </Label>
-                      <Input 
-                        value={deleteConfirmText}
-                        onChange={(e) => setDeleteConfirmText(e.target.value)}
-                        className="h-11 font-mono text-sm border-gray-300 focus:border-red-500 focus:ring-red-500"
-                        placeholder="delete this branch"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-600 font-medium">
-                    Are you sure you want to delete this branch? There are no entries yet, so it's safe to delete.
-                  </p>
-                )}
-              </div>
-
-              <div className="bg-gray-50 px-6 py-4 flex gap-3 justify-end border-t border-gray-100">
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setDeleteModal({ isOpen: false, branch: null });
-                    setDeleteConfirmText("");
-                  }}
-                  disabled={!!deletingId}
-                  className="font-bold"
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  variant="destructive"
-                  onClick={handleDelete}
-                  disabled={isDeleteButtonDisabled || !!deletingId}
-                  className="font-bold shadow-sm"
-                >
-                  {deletingId ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Deleting...
-                    </div>
-                  ) : (
-                    "Delete Branch"
-                  )}
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Bulk Delete Modal */}
-      <AnimatePresence>
-        {bulkDeleteModal && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/40 backdrop-blur-sm"
-            onClick={() => {
-              if (!bulkDeleting) {
-                setBulkDeleteModal(false);
-                setDeleteConfirmText("");
-              }
-            }}
-          >
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              className="bg-white rounded-2xl w-full max-w-md shadow-2xl border border-red-100 overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                    <AlertTriangle className="w-5 h-5 text-red-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900">Delete {selectedBranchIds.size} Branches</h3>
-                    <p className="text-sm font-medium text-gray-500">Bulk action</p>
-                  </div>
-                </div>
-
-                {bulkEntriesCount > 0 ? (
-                  <div className="space-y-4">
-                    <div className="bg-red-50 border border-red-100 p-4 rounded-xl">
-                      <p className="text-sm text-red-800 font-medium leading-relaxed">
-                        These branches contain a combined total of <strong className="font-black text-red-900">{bulkEntriesCount} active {bulkEntriesCount === 1 ? 'entry' : 'entries'}</strong>. 
-                        Deleting them will permanently destroy all their entries and winners. This action cannot be undone.
-                      </p>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label className="text-xs font-bold text-gray-700">
-                        To verify, type <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-red-600 select-all">delete these branches</span> below:
-                      </Label>
-                      <Input 
-                        value={deleteConfirmText}
-                        onChange={(e) => setDeleteConfirmText(e.target.value)}
-                        className="h-11 font-mono text-sm border-gray-300 focus:border-red-500 focus:ring-red-500"
-                        placeholder="delete these branches"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-600 font-medium">
-                    Are you sure you want to delete these {selectedBranchIds.size} branches? There are no entries in any of them, so it's safe to proceed.
-                  </p>
-                )}
-              </div>
-
-              <div className="bg-gray-50 px-6 py-4 flex gap-3 justify-end border-t border-gray-100">
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setBulkDeleteModal(false);
-                    setDeleteConfirmText("");
-                  }}
-                  disabled={bulkDeleting}
-                  className="font-bold"
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  variant="destructive"
-                  onClick={handleBulkDelete}
-                  disabled={isBulkDeleteButtonDisabled || bulkDeleting}
-                  className="font-bold shadow-sm"
-                >
-                  {bulkDeleting ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Deleting...
-                    </div>
-                  ) : (
-                    "Delete All Selected"
-                  )}
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <div className="bg-gray-50 px-5 py-3 flex gap-2 justify-end border-t border-gray-100">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setBulkDeleteModal(false);
+                  setDeleteConfirmText("");
+                }}
+                disabled={bulkDeleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleBulkDelete}
+                disabled={isBulkDeleteButtonDisabled || bulkDeleting}
+              >
+                {bulkDeleting ? "Deleting…" : "Delete selected"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

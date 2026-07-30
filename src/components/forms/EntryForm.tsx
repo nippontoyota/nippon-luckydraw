@@ -207,7 +207,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
                 className="mb-14 flex flex-col items-center justify-center gap-3"
               >
                 <div className="relative h-14 w-14">
-                  <Image src="/images/logo_for_customer_facing.png" alt="Toyota Emblem" fill sizes="56px" className="object-contain object-center" priority />
+                  <Image src="/images/logo_for_customer_facing.webp" alt="Toyota Emblem" fill sizes="56px" className="object-contain object-center" priority />
                 </div>
                 <div className="flex flex-col items-center mt-3">
                   <p className="text-white text-[20px] font-black tracking-[0.15em] leading-tight uppercase">NIPPON</p>
@@ -222,7 +222,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
                 className="mb-14 relative"
               >
                 <div className="pookalam-spin shadow-2xl" style={{ width: 160, height: 160, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(255,215,0,0.3)', position: 'relative' }}>
-                  <Image src="/images/pookalam-generated.png" alt="Loading" fill sizes="160px" className="object-cover" priority />
+                  <Image src="/images/pookalam-generated.webp" alt="Loading" fill sizes="160px" className="object-cover" priority />
                 </div>
               </motion.div>
               
@@ -275,7 +275,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
         >
           <div className="flex items-center gap-2.5">
             <div className="relative h-8 w-8">
-              <Image src="/images/logo_for_customer_facing.png" alt="Toyota Emblem" fill sizes="32px" className="object-contain" priority />
+              <Image src="/images/logo_for_customer_facing.webp" alt="Toyota Emblem" fill sizes="32px" className="object-contain" priority />
             </div>
             <div className="flex flex-col justify-center">
               <p className="text-white text-[16px] font-black tracking-[0.15em] leading-tight uppercase">NIPPON</p>
@@ -283,7 +283,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
             </div>
           </div>
           <div className="pookalam-spin opacity-90 flex-shrink-0 relative" style={{ width: 72, height: 72 }}>
-            <Image src="/images/pookalam.png" alt="Onam pookalam" fill sizes="72px" className="object-cover" priority />
+            <Image src="/images/pookalam.webp" alt="Onam pookalam" fill sizes="72px" className="object-cover" priority />
           </div>
         </motion.div>
         
@@ -294,7 +294,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
           className="relative mx-4 mt-2 rounded-2xl overflow-hidden flex-shrink-0" 
           style={{ height: 110, background: 'linear-gradient(90deg, #FFD400 0%, #F47C00 100%)' }}
         >
-          <Image src="/images/onam-boat.png" alt="Happy Onam snake boat race" fill sizes="(max-width: 768px) 100vw, 420px" className="object-cover object-center" priority style={{ mixBlendMode: 'multiply', opacity: 0.8 }} />
+          <Image src="/images/onam-boat.webp" alt="Happy Onam snake boat race" fill sizes="(max-width: 768px) 100vw, 420px" className="object-cover object-center" priority style={{ mixBlendMode: 'multiply', opacity: 0.8 }} />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0) 60%)' }} />
           <div className="absolute left-4 top-1/2 -translate-y-1/2">
             <p className="text-white/90 text-[9px] font-semibold tracking-[0.2em] uppercase">Festival Offer</p>

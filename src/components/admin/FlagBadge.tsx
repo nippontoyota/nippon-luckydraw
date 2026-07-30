@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 
-// Poll every 30 seconds for new flagged entries
 const POLL_INTERVAL = 30_000;
 
 export function FlagBadge() {
@@ -16,7 +15,7 @@ export function FlagBadge() {
         setCount(data.count ?? 0);
       }
     } catch {
-      // Silently fail — badge just stays at 0
+      // Badge stays at 0
     }
   }, []);
 
@@ -29,7 +28,11 @@ export function FlagBadge() {
   if (count === 0) return null;
 
   return (
-    <span className="ml-auto inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold bg-red-500 text-white leading-none">
+    <span
+      className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full text-[10px] font-bold bg-red-500 text-white leading-none"
+      title={`${count} flagged entries`}
+      aria-label={`${count} flagged entries`}
+    >
       {count > 99 ? "99+" : count}
     </span>
   );

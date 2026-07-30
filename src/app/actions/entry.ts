@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { entrySchema, type EntryInput } from "@/schemas/entry";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
@@ -19,7 +20,7 @@ export async function submitEntry(data: EntryInput) {
   }
 
   const { name, phone, modelId, colourId, vin, branchId, honeypot } = validated.data;
-  const normalizedPhone = `+91${phone}`; // phone is already stripped of +91 by schema transform
+  const normalizedPhone = `+91${phone}`;
 
   // 2. Honeypot check
   if (honeypot) {
@@ -71,7 +72,6 @@ export async function submitEntry(data: EntryInput) {
         },
       });
 
-    // Queue WhatsApp message
       await tx.whatsAppLog.create({
         data: {
           status: "PENDING",
@@ -82,10 +82,8 @@ export async function submitEntry(data: EntryInput) {
       return newEntry;
     });
 
-    // Manually trigger the queue processor immediately so free Vercel accounts don't have to wait for the 1-per-day cron job.
-    // We do this by dynamically importing the GET handler from the cron route to avoid circular dependencies,
-    // and passing a dummy request.
-    const triggerCron = async () => {
+    // Fire WhatsApp processing after response sent (non-blocking)
+    after(async () => {
       try {
         const { GET } = await import("@/app/api/cron/whatsapp/route");
         const dummyReq = new Request("http://localhost/api/cron/whatsapp", {
@@ -95,12 +93,9 @@ export async function submitEntry(data: EntryInput) {
         });
         await GET(dummyReq);
       } catch (e) {
-        console.error("Failed to trigger whatsapp cron directly:", e);
+        console.error("Failed to trigger whatsapp cron:", e);
       }
-    };
-    
-    // We await it so Vercel doesn't kill the background process, though it adds a slight delay to the submission.
-    await triggerCron();
+    });
 
     return { id: entry.id };
   } catch (error) {
@@ -142,4 +137,3 @@ export async function toggleExclude(entryId: string) {
     return { error: "Failed to update entry." };
   }
 }
-

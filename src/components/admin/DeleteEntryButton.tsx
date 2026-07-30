@@ -22,44 +22,57 @@ export function DeleteEntryButton({ id, name }: { id: string; name: string }) {
   return (
     <>
       <button
+        type="button"
         onClick={() => setShowModal(true)}
         disabled={isPending}
-        className="inline-flex items-center justify-center rounded text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 disabled:opacity-50"
-        title="Delete Entry"
+        className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30 text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 disabled:opacity-50 border border-transparent hover:border-red-100"
+        title="Delete entry"
+        aria-label={`Delete entry for ${name}`}
       >
         <Trash2 className="w-4 h-4" />
-        <span className="sr-only">Delete</span>
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm transition-opacity">
-          <div 
-            className="bg-white rounded-xl shadow-lg max-w-sm w-full p-6 space-y-4 relative animate-in fade-in zoom-in-95 duration-200"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/40"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-entry-title"
+          onClick={() => !isPending && setShowModal(false)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-lg max-w-sm w-full p-5 space-y-4 border border-gray-200"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
+              <div className="h-11 w-11 rounded-full bg-red-100 flex items-center justify-center">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900">Delete Entry</h3>
-              <p className="text-sm text-gray-500">
-                Are you sure you want to delete the entry for <span className="font-semibold text-gray-900">{name}</span>? This action cannot be undone.
+              <h3 id="delete-entry-title" className="text-base font-semibold text-gray-900">
+                Delete entry?
+              </h3>
+              <p className="text-sm text-gray-600">
+                This permanently removes{" "}
+                <span className="font-semibold text-gray-900 break-words">{name}</span> from the draw.
               </p>
             </div>
-            
-            <div className="flex gap-3 pt-2">
+
+            <div className="flex gap-2 pt-1">
               <button
+                type="button"
                 onClick={() => setShowModal(false)}
                 disabled={isPending}
-                className="flex-1 inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors"
+                className="flex-1 inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleDelete}
                 disabled={isPending}
-                className="flex-1 inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 disabled:opacity-50 transition-colors"
+                className="flex-1 inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors"
               >
-                {isPending ? "Deleting..." : "Delete"}
+                {isPending ? "Deleting…" : "Delete"}
               </button>
             </div>
           </div>

@@ -13,16 +13,17 @@ export default async function BranchesPage() {
     },
   });
 
-  // Get the base URL from env or request headers for QR codes
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Branch Management</h1>
-        <p className="text-muted-foreground mt-1">Create new branches and generate QR codes.</p>
+      <div className="min-w-0">
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Branches</h1>
+        <p className="text-sm text-gray-600 mt-1 max-w-xl">
+          Create dealership locations, then print or share each branch QR code for walk-in entries.
+        </p>
       </div>
-      
+
       <BranchesClient branches={branches} appUrl={appUrl} />
     </div>
   );

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { isAuthenticated, logout } from "@/app/actions/auth";
 import { LogOut } from "lucide-react";
 
-import { AdminNav } from "@/components/admin/AdminNav";
+import { AdminNav, AdminMobileNav } from "@/components/admin/AdminNav";
 import { SupabaseRealtime } from "@/components/admin/SupabaseRealtime";
 
 export default async function AdminDashboardLayout({
@@ -16,47 +16,69 @@ export default async function AdminDashboardLayout({
   }
 
   return (
-    <div className="h-screen overflow-hidden flex text-gray-900 font-sans bg-gray-50">
+    <div className="h-dvh overflow-hidden flex text-gray-900 font-sans bg-gray-50">
       <SupabaseRealtime />
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex-col hidden md:flex relative overflow-hidden shadow-sm">
-        <div className="h-16 flex items-center px-6 border-b border-gray-200 bg-gray-50/50">
-          <img 
-            src="https://dealer.toyotabharat.com/dealerV11/images/common/favicon.ico" 
-            alt="Nippon Toyota" 
-            className="w-6 h-6 mr-2"
+
+      <aside className="w-60 bg-white border-r border-gray-200 flex-col hidden md:flex shrink-0">
+        <div className="h-14 flex items-center gap-2.5 px-5 border-b border-gray-200">
+          <img
+            src="https://dealer.toyotabharat.com/dealerV11/images/common/favicon.ico"
+            alt=""
+            className="w-5 h-5"
           />
-          <span className="text-[14px] font-semibold text-gray-900">Nippon Toyota</span>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-gray-900 truncate leading-tight">Nippon Toyota</p>
+            <p className="text-[11px] text-gray-500 leading-tight">Lucky Draw Admin</p>
+          </div>
         </div>
         <AdminNav />
-        <div className="p-4 border-t border-gray-200 bg-gray-50/50">
+        <div className="p-3 border-t border-gray-200">
           <form action={logout}>
-            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-semibold text-gray-500 hover:bg-red-50 hover:text-red-700 w-full text-left transition-colors">
-              <LogOut className="w-[18px] h-[18px] opacity-70" />
+            <button
+              type="submit"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-700 w-full text-left transition-colors"
+            >
+              <LogOut className="w-4 h-4 shrink-0 opacity-70" />
               Sign out
             </button>
           </form>
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center px-6 justify-between md:justify-end sticky top-0 z-10 shadow-sm">
-          <div className="md:hidden flex items-center gap-2">
-            <img src="https://dealer.toyotabharat.com/dealerV11/images/common/favicon.ico" alt="Nippon Toyota" className="w-5 h-5" />
-            <span className="text-[14px] font-semibold text-gray-900">Nippon Toyota</span>
+        <header className="h-14 bg-white border-b border-gray-200 flex items-center px-4 sm:px-6 justify-between shrink-0">
+          <div className="md:hidden flex items-center gap-2 min-w-0">
+            <img
+              src="https://dealer.toyotabharat.com/dealerV11/images/common/favicon.ico"
+              alt=""
+              className="w-5 h-5 shrink-0"
+            />
+            <span className="text-sm font-semibold text-gray-900 truncate">Lucky Draw Admin</span>
           </div>
-          <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 py-1.5 px-2 rounded-xl transition-colors -mr-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-semibold bg-gray-900 text-white">A</div>
-            <span className="text-[14px] font-medium text-gray-900">Admin</span>
+          <div className="hidden md:block" />
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold bg-gray-900 text-white">
+              A
+            </div>
+            <span className="text-sm font-medium text-gray-700 hidden sm:inline">Admin</span>
+            <form action={logout} className="md:hidden">
+              <button
+                type="submit"
+                className="ml-1 p-2 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-700 transition-colors"
+                aria-label="Sign out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </form>
           </div>
         </header>
-        <main className="flex-1 p-6 md:p-8 overflow-auto">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
+
+        <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-auto pb-20 md:pb-8">
+          <div className="max-w-6xl mx-auto w-full min-w-0">{children}</div>
         </main>
       </div>
+
+      <AdminMobileNav />
     </div>
   );
 }
