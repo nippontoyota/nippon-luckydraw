@@ -42,12 +42,13 @@ export async function GET(request: Request) {
         if (!entry) throw new Error("Associated entry not found");
 
         // Entry registration confirmation
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
         const variables = {
           name: entry.name,
           branchName: entry.branch.name,
           vehicle: `${entry.model.name} (${entry.colour.name})`,
             vin: entry.vin,
-            confirmationUrl: `https://nippon-luckydraw-phi.vercel.app/confirmation/${entry.id}`,
+            confirmationUrl: `${appUrl}/confirmation/${entry.id}`,
           };
           await sendWhatsAppMessage(entry.phone, DOUBLETICK_CONFIRM_TEMPLATE, variables);
 

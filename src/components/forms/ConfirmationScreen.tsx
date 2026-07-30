@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import QRCode from "qrcode";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
-  ToyotaEmblem,
   NilavilakkuLamp,
   Sparkle,
 } from "./FestiveElements";
@@ -23,14 +20,10 @@ interface ConfirmationScreenProps {
 export function ConfirmationScreen({
   entryId,
   name,
-  branchName,
   modelName,
   colourName,
-  vin,
 }: ConfirmationScreenProps) {
-  const router = useRouter();
-
-  const confetti = useMemo(() =>
+  const [confetti] = useState(() =>
     Array.from({ length: 30 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
@@ -39,7 +32,8 @@ export function ConfirmationScreen({
       color: ['#EB0A1E', '#D4930A', '#FFD700', '#F5A623', '#fff', '#FF6B6B', '#FF8F00', '#FFF176'][i % 8],
       size: 6 + Math.floor(Math.random() * 5),
       shape: i % 3,
-    })), [])
+    }))
+  );
 
   return (
     <div className="flex flex-col min-h-screen relative font-sans w-full max-w-[420px] mx-auto shadow-2xl overflow-hidden" style={{ background: '#FFF4E1' }}>
@@ -138,7 +132,7 @@ export function ConfirmationScreen({
             Onam 2026
           </p>
           <h2 className="text-gray-900 text-[28px] font-black leading-tight">
-            You're In! 🎉
+            You&apos;re In! 🎉
           </h2>
           <p className="text-[13px] font-normal mt-1.5 leading-relaxed" style={{ color: '#78350F' }}>
             Thank you, <span className="font-extrabold text-[#0E3A36]">{name.split(' ')[0]}</span>!<br />
