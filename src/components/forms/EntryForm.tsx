@@ -7,6 +7,7 @@ import { entrySchema, type EntryInput } from "@/schemas/entry";
 import { submitEntry } from "@/app/actions/entry";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
@@ -453,7 +454,15 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
               </div>
               <span className="text-[11px] leading-relaxed font-medium text-[#0E3A36] select-none">
                 I confirm that the details provided are accurate and agree to the 
-                <a href="#" className="text-[#F47C00] font-bold mx-1 hover:underline">Terms &amp; Conditions</a> 
+                <Link
+                  href="/terms-and-conditions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(event) => event.stopPropagation()}
+                  className="text-[#F47C00] font-bold mx-1 hover:underline"
+                >
+                  Terms &amp; Conditions
+                </Link>
                 of the Nippon Toyota Lucky Draw.
               </span>
             </label>
