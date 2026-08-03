@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { EntryForm } from "@/components/forms/EntryForm";
@@ -35,10 +37,11 @@ export default async function EnterPage(
     name: m.name,
     colours: m.colours,
   }));
+  const termsMarkdown = fs.readFileSync(path.join(process.cwd(), "nippon-toyota-onam-lucky-draw-tnc.md"), "utf8");
 
   return (
     <main className="min-h-screen bg-[#fbf9f8]">
-      <EntryForm branchId={branch.id} branchName={branch.name} models={models} />
+      <EntryForm branchId={branch.id} branchName={branch.name} models={models} termsMarkdown={termsMarkdown} />
     </main>
   );
 }

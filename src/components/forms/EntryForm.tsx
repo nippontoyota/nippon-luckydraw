@@ -7,7 +7,7 @@ import { entrySchema, type EntryInput } from "@/schemas/entry";
 import { submitEntry } from "@/app/actions/entry";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
+import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
@@ -15,6 +15,7 @@ import {
   Sparkle,
   PetalRain,
 } from "./FestiveElements";
+import { TermsContent } from "./TermsContent";
 
 interface ModelWithColours {
   id: string;
@@ -26,6 +27,7 @@ interface EntryFormProps {
   branchId: string;
   branchName: string;
   models: ModelWithColours[];
+  termsMarkdown: string;
 }
 
 const inputBase = (hasError: boolean) =>
@@ -136,8 +138,9 @@ function SearchableSelect({
   );
 }
 
-export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
+export function EntryForm({ branchId, branchName, models, termsMarkdown }: EntryFormProps) {
   const [loading, setLoading] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(false);
   const router = useRouter();
 
   const form = useForm<EntryInput>({
@@ -175,6 +178,65 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
   return (
     <div className="flex flex-col min-h-screen relative font-sans w-full max-w-[420px] mx-auto shadow-2xl overflow-hidden" style={{ background: '#FFF4E1' }}>
       <PetalRain />
+
+      <AnimatePresence>
+        {termsOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[90] flex h-[100dvh] w-screen items-center justify-center bg-black/55 p-3"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="terms-title"
+            onClick={() => setTermsOpen(false)}
+          >
+            <motion.div
+              initial={{ y: 28, scale: 0.96 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: 28, scale: 0.96 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="flex max-h-[92dvh] w-full max-w-[390px] flex-col overflow-hidden rounded-3xl border border-[#FFD400] bg-[#FFF4E1] shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="relative overflow-hidden bg-[#0E3A36] px-5 pb-4 pt-5 text-white">
+                <button
+                  type="button"
+                  onClick={() => setTermsOpen(false)}
+                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+                  aria-label="Close terms and conditions"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+                <div className="flex items-center gap-2 pr-10">
+                  <div className="h-8 w-1 rounded-full bg-[#F47C00]" />
+                  <div>
+                    <p id="terms-title" className="text-[16px] font-black leading-tight">Terms &amp; Conditions</p>
+                    <p className="mt-1 text-[11px] font-normal text-white/70">Nippon Toyota Onam Lucky Draw</p>
+                  </div>
+                  <div className="ml-auto">
+                    <Sparkle size={14} color="#FFD700" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto bg-white p-5">
+                <TermsContent markdown={termsMarkdown} />
+              </div>
+
+              <div className="border-t border-[#FFD400] bg-white p-4">
+                <button
+                  type="button"
+                  onClick={() => setTermsOpen(false)}
+                  className="w-full rounded-2xl bg-[#F47C00] px-4 py-3.5 text-[13px] font-extrabold uppercase tracking-widest text-white shadow-lg transition-transform hover:scale-[1.01] active:scale-[0.98]"
+                >
+                  Back to form
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Loading Overlay */}
       <AnimatePresence>
@@ -440,35 +502,34 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
           </Field>
 
           <div className="mt-8 mb-6 bg-white p-4 rounded-xl border border-[#FFD400]">
-            <label className="flex items-start gap-3 cursor-pointer group">
+            <div className="flex items-start gap-3">
               <div className="relative flex items-center justify-center mt-0.5">
                 <input
+                  id="confirm-terms"
                   type="checkbox"
                   {...form.register("confirm")}
                   className="peer sr-only"
                 />
-                <div className="w-5 h-5 rounded border-2 border-[#FFD400] bg-white peer-checked:bg-[#0E3A36] peer-checked:border-[#0E3A36] transition-all shadow-sm" />
+                <label htmlFor="confirm-terms" className="block w-5 h-5 rounded border-2 border-[#FFD400] bg-white peer-checked:bg-[#0E3A36] peer-checked:border-[#0E3A36] transition-all shadow-sm cursor-pointer" />
                 <svg className="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <span className="text-[11px] leading-relaxed font-medium text-[#0E3A36] select-none">
+              <p className="text-[11px] leading-relaxed font-medium text-[#0E3A36]">
                 I confirm that the details provided are accurate and agree to the 
-                <Link
-                  href={{
-                    pathname: "/terms-and-conditions",
-                    query: { returnTo: `/enter/${branchId}` },
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setTermsOpen(true);
                   }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(event) => event.stopPropagation()}
                   className="text-[#F47C00] font-bold mx-1 hover:underline"
                 >
                   Terms &amp; Conditions
-                </Link>
+                </button>
                 of the Nippon Toyota Lucky Draw.
-              </span>
-            </label>
+              </p>
+            </div>
             {form.formState.errors.confirm && (
               <motion.p 
                 initial={{ opacity: 0, y: -5 }} 
