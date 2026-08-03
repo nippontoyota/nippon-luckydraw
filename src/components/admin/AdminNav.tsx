@@ -29,6 +29,7 @@ export function AdminNav() {
           <Link
             key={item.href}
             href={item.href}
+            prefetch={false}
             className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${
               isActive
                 ? "bg-gray-900 text-white"
@@ -62,6 +63,7 @@ export function AdminMobileNav() {
             <Link
               key={item.href}
               href={item.href}
+              prefetch={false}
               className={`relative flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors ${
                 isActive ? "text-gray-900" : "text-gray-500"
               }`}
