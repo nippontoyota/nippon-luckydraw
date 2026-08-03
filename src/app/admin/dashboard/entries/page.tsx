@@ -190,11 +190,11 @@ export default async function EntriesPage(props: {
                           <td className="px-4 py-3 min-w-0 max-w-[200px]">
                             <div
                               className="text-gray-900 truncate"
-                              title={`${entry.model.name} · ${entry.colour.name}`}
+                              title={`${entry.model?.name ?? "—"} · ${entry.colour?.name ?? "—"}`}
                             >
-                              {entry.model.name}
+                              {entry.model?.name ?? "—"}
                               <span className="text-gray-400 mx-1">·</span>
-                              {entry.colour.name}
+                              {entry.colour?.name ?? "—"}
                             </div>
                             <div className="font-mono text-xs text-gray-500 mt-0.5 truncate" title={entry.vin}>
                               {entry.vin}

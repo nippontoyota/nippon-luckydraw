@@ -1,4 +1,5 @@
 import "server-only";
+import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 
 function getEncodedKey() {
@@ -25,4 +26,12 @@ export async function decrypt(session: string | undefined = "") {
   } catch {
     return null;
   }
+}
+
+export async function verifyAdminSession(): Promise<boolean> {
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get("admin_session")?.value;
+  if (!sessionToken) return false;
+  const payload = await decrypt(sessionToken);
+  return !!payload;
 }
