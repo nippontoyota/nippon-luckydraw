@@ -455,7 +455,10 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
               <span className="text-[11px] leading-relaxed font-medium text-[#0E3A36] select-none">
                 I confirm that the details provided are accurate and agree to the 
                 <Link
-                  href="/terms-and-conditions"
+                  href={{
+                    pathname: "/terms-and-conditions",
+                    query: { returnTo: `/enter/${branchId}` },
+                  }}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(event) => event.stopPropagation()}
