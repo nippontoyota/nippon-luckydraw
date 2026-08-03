@@ -79,6 +79,10 @@ async function main() {
       name: "Vellfire",
       colours: ["Super White", "Attitude Black", "Graphite Grey", "Dark Blue Mica", "Precious Bronze", "Platinum White Pearl", "Silver", "Red Mica Metallic"],
     },
+    {
+      name: "Rumion",
+      colours: ["Cafe White", "Enticing Silver", "Iconic Grey", "Rustic Brown", "Spunky Blue"],
+    },
   ];
 
   // Upsert models, then batch-insert all colours for each model
