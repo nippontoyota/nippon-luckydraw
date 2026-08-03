@@ -79,10 +79,6 @@ async function main() {
       name: "Vellfire",
       colours: ["Super White", "Attitude Black", "Graphite Grey", "Dark Blue Mica", "Precious Bronze", "Platinum White Pearl", "Silver", "Red Mica Metallic"],
     },
-    {
-      name: "Land Cruiser Prado",
-      colours: ["Super White", "Attitude Black", "Graphite Grey", "Pearl White", "Dark Blue Mica", "Dark Red Mica", "Fine Silver", "Silky White"],
-    },
   ];
 
   // Upsert models, then batch-insert all colours for each model
