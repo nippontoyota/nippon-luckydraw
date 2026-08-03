@@ -199,11 +199,11 @@ export function EntryForm({ branchId, branchName, models, termsMarkdown }: Entry
               className="flex max-h-[92dvh] w-full max-w-[390px] flex-col overflow-hidden rounded-3xl border border-[#FFD400] bg-[#FFF4E1] shadow-2xl"
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="relative overflow-hidden bg-[#0E3A36] px-5 pb-4 pt-5 text-white">
+              <div className="relative overflow-hidden border-b border-[#FFD400]/60 bg-[#0E3A36] px-5 py-4 text-white">
                 <button
                   type="button"
                   onClick={() => setTermsOpen(false)}
-                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+                  className="absolute right-4 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
                   aria-label="Close terms and conditions"
                 >
                   <X className="h-4 w-4" aria-hidden="true" />
@@ -213,9 +213,6 @@ export function EntryForm({ branchId, branchName, models, termsMarkdown }: Entry
                   <div>
                     <p id="terms-title" className="text-[16px] font-black leading-tight">Terms &amp; Conditions</p>
                     <p className="mt-1 text-[11px] font-normal text-white/70">Nippon Toyota Onam Lucky Draw</p>
-                  </div>
-                  <div className="ml-auto">
-                    <Sparkle size={14} color="#FFD700" />
                   </div>
                 </div>
               </div>
