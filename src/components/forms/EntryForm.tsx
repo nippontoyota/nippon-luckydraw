@@ -298,7 +298,7 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
           <div className="absolute left-4 top-1/2 -translate-y-1/2">
             <p className="text-white/90 text-[9px] font-semibold tracking-[0.2em] uppercase">Festival Offer</p>
             <p className="text-white text-[18px] font-black leading-tight">Lucky Draw</p>
-            <p className="text-[10px] font-semibold mt-0.5 text-white/90">Win Exclusive Prizes!</p>
+            <p className="text-[10px] font-semibold mt-0.5 text-white/90">Onam Special</p>
           </div>
         </motion.div>
         
@@ -314,12 +314,12 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
               <p className="text-[10px] font-bold tracking-[0.22em] uppercase" style={{ color: '#FFD700' }}>Onam Festival 2026</p>
               <div className="h-px flex-1" style={{ background: 'rgba(255,215,0,0.35)' }} />
             </div>
-            <h1 className="text-white text-[22px] font-black leading-tight">
+            <h1 className="text-white text-[22px] font-black leading-tight text-balance">
               Enter &amp; Win<br />
-              <span className="shimmer-gold" style={{ fontSize: 26 }}>Amazing Prizes!</span>
+              <span className="shimmer-gold" style={{ fontSize: 26 }}>a Gold Coin</span>
             </h1>
-            <p className="text-white/65 text-[11px] mt-1.5 font-normal leading-relaxed">
-              Fill in your vehicle details for a chance to win.
+            <p className="text-white/70 text-[11px] mt-1.5 font-normal leading-relaxed text-pretty">
+              Fill in your vehicle details to join the draw.
             </p>
           </div>
           <div className="flex flex-col items-center gap-2 pb-1">
