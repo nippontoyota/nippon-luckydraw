@@ -1,29 +1,60 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 
 const POLL_INTERVAL = 30_000;
 
-export function FlagBadge() {
-  const [count, setCount] = useState(0);
+// ponytail: desktop+mobile both mount FlagBadge — share one fetch/poll
+let cachedCount = 0;
+let inflight: Promise<number> | null = null;
+let pollTimer: ReturnType<typeof setInterval> | null = null;
+let subscribers = 0;
+const listeners = new Set<(n: number) => void>();
 
-  const fetchCount = useCallback(async () => {
-    try {
-      const res = await fetch("/api/flags/count", { credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
-        setCount(data.count ?? 0);
-      }
-    } catch {
-      // Badge stays at 0
+function notify(n: number) {
+  cachedCount = n;
+  listeners.forEach((l) => l(n));
+}
+
+async function loadCount() {
+  if (inflight) return inflight;
+  inflight = fetch("/api/flags/count", { credentials: "include" })
+    .then(async (res) => {
+      if (!res.ok) return cachedCount;
+      const data = await res.json();
+      const next = data.count ?? 0;
+      notify(next);
+      return next;
+    })
+    .catch(() => cachedCount)
+    .finally(() => {
+      inflight = null;
+    });
+  return inflight;
+}
+
+function subscribe(listener: (n: number) => void) {
+  listeners.add(listener);
+  subscribers += 1;
+  listener(cachedCount);
+  void loadCount();
+  if (!pollTimer) {
+    pollTimer = setInterval(() => void loadCount(), POLL_INTERVAL);
+  }
+  return () => {
+    listeners.delete(listener);
+    subscribers -= 1;
+    if (subscribers === 0 && pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
     }
-  }, []);
+  };
+}
 
-  useEffect(() => {
-    fetchCount();
-    const interval = setInterval(fetchCount, POLL_INTERVAL);
-    return () => clearInterval(interval);
-  }, [fetchCount]);
+export function FlagBadge() {
+  const [count, setCount] = useState(cachedCount);
+
+  useEffect(() => subscribe(setCount), []);
 
   if (count === 0) return null;
 

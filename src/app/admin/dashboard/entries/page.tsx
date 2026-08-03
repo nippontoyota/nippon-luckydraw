@@ -37,11 +37,8 @@ export default async function EntriesPage(props: {
       }
     : {};
 
-  const [branches, entries, totalEntries, flaggedCount] = await Promise.all([
-    prisma.branch.findMany({
-      orderBy: { name: "asc" },
-      select: { id: true, name: true },
-    }),
+  // Flagged count lives on FlagBadge; branch names come from the entry join (one less query)
+  const [entries, totalEntries] = await Promise.all([
     prisma.entry.findMany({
       where: whereClause,
       select: {
@@ -53,6 +50,7 @@ export default async function EntriesPage(props: {
         excluded: true,
         createdAt: true,
         branchId: true,
+        branch: { select: { id: true, name: true } },
         model: { select: { name: true } },
         colour: { select: { name: true } },
       },
@@ -61,17 +59,17 @@ export default async function EntriesPage(props: {
       skip: (page - 1) * PAGE_SIZE,
     }),
     prisma.entry.count({ where: whereClause }),
-    prisma.entry.count({ where: { flag: { not: null } } }),
   ]);
 
   const totalPages = Math.max(1, Math.ceil(totalEntries / PAGE_SIZE));
 
-  const groups = branches
-    .map((branch) => ({
-      branch,
-      entries: entries.filter((e) => e.branchId === branch.id),
-    }))
-    .filter((group) => group.entries.length > 0);
+  const groupMap = new Map<string, { branch: { id: string; name: string }; entries: typeof entries }>();
+  for (const entry of entries) {
+    const g = groupMap.get(entry.branchId);
+    if (g) g.entries.push(entry);
+    else groupMap.set(entry.branchId, { branch: entry.branch, entries: [entry] });
+  }
+  const groups = [...groupMap.values()];
 
   const pageHref = (p: number) =>
     `?page=${p}${search ? `&search=${encodeURIComponent(search)}` : ""}`;
@@ -83,12 +81,6 @@ export default async function EntriesPage(props: {
           <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Entries</h1>
           <p className="text-sm text-gray-600 mt-1 max-w-xl">
             Review submissions, exclude fraud suspects from the draw, or delete invalid entries.
-            {flaggedCount > 0 && (
-              <span className="text-red-700 font-medium">
-                {" "}
-                {flaggedCount} flagged for review.
-              </span>
-            )}
           </p>
         </div>
         <a
