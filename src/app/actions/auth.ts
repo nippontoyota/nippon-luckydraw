@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { encrypt, decrypt } from "@/lib/session";
+import { encrypt, verifyAdminSession } from "@/lib/session";
 
 import { redirect } from "next/navigation";
 
@@ -38,10 +38,5 @@ export async function logout() {
 }
 
 export async function isAuthenticated() {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get("admin_session")?.value;
-  if (!sessionToken) return false;
-
-  const payload = await decrypt(sessionToken);
-  return !!payload;
+  return verifyAdminSession();
 }
