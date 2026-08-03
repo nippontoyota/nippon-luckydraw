@@ -489,18 +489,6 @@ export function EntryForm({ branchId, branchName, models }: EntryFormProps) {
           >
             {loading ? "Registering..." : "Submit Entry →"}
           </motion.button>
-
-          <div className="flex items-center justify-center gap-1.5 mt-3">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1L7.5 4.5H11L8.5 6.5L9.5 10L6 8L2.5 10L3.5 6.5L1 4.5H4.5Z" fill="#D4930A" />
-            </svg>
-            <p className="text-[10px] font-medium" style={{ color: '#92400E' }}>
-              Your information is secure with us
-            </p>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1L7.5 4.5H11L8.5 6.5L9.5 10L6 8L2.5 10L3.5 6.5L1 4.5H4.5Z" fill="#D4930A" />
-            </svg>
-          </div>
         </motion.form>
       </div>
     </div>
