@@ -1,16 +1,9 @@
 # Nippon Toyota — Onam Lucky Draw 2026
 ## Terms and Conditions
 
----
-
-**Scheme Name:** Nippon Toyota Onam Lucky Draw — Malabar Gold Coin Offer  
-**Sponsored By:** Nippon Toyota Pvt. Ltd.
-
----
-
 ## 1. Program Details & Concept
 
-1.1 These Terms and Conditions govern the "Onam Lucky Draw Scheme" (hereinafter referred to as the "Program") organised by **Nippon Toyota Pvt. Ltd.** (hereinafter referred to as "Nippon Toyota"), wherein eligible customers can participate by completing a physical delivery of a vehicle at any Nippon Toyota outlet during the Program Period.
+1.1 These Terms and Conditions govern the "Onam Lucky Draw Scheme" organised by **Nippon Toyota Pvt. Ltd.** Eligible customers can participate by completing a physical delivery of a vehicle at any Nippon Toyota outlet during the Program Period.
 
 1.2 The Program is subject to all applicable central and state laws and regulations of India, including those of the State of Kerala.
 
@@ -22,7 +15,7 @@
 
 ## 2. Program Period
 
-2.1 The Program will run from **1st August 2026 to 31st August 2026** (both dates inclusive), hereinafter referred to as the "Program Period."
+2.1 The Program will run from **1st August 2026 to 31st August 2026** (both dates inclusive).
 
 2.2 Only physical deliveries that occur within the Program Period at authorised Nippon Toyota outlets will be considered eligible entries.
 
