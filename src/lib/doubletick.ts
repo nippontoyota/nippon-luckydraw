@@ -1,5 +1,5 @@
 const DOUBLETICK_API_URL = "https://public.doubletick.io/whatsapp/message/template";
-const DOUBLETICK_CONFIRM_TEMPLATE = process.env.DOUBLETICK_CONFIRM_TEMPLATE ?? "onam_2026_confirmation_message_v3";
+const DOUBLETICK_CONFIRM_TEMPLATE = process.env.DOUBLETICK_CONFIRM_TEMPLATE ?? "onam_2026_confirmation_message_v2";
 
 interface SendResult {
   success: boolean;
