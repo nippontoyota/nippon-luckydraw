@@ -3,7 +3,6 @@ import path from "node:path";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { NilavilakkuLamp, PetalRain, Sparkle } from "@/components/forms/FestiveElements";
 import { TermsContent } from "@/components/forms/TermsContent";
 
@@ -85,8 +84,7 @@ export default async function TermsAndConditionsPage({
               href={returnTo}
               className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F47C00] px-4 py-3.5 text-[13px] font-extrabold uppercase tracking-widest text-white shadow-lg transition-transform hover:scale-[1.01] active:scale-[0.98]"
             >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Back to form
+              I understand
             </Link>
           )}
         </section>
