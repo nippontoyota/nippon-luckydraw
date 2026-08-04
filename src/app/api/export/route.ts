@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
       orderBy: [{ branch: { name: "asc" } }, { createdAt: "asc" }],
     });
 
-    const rows = entries.map((e) => {
+    const toRow = (e: (typeof entries)[number]) => {
       let flags: string[] = [];
       try {
         flags = e.flag ? JSON.parse(e.flag) : [];
@@ -67,15 +67,41 @@ export async function GET(req: NextRequest) {
         Model: e.model?.name ?? "—",
         Colour: e.colour?.name ?? "—",
         VIN: e.vin,
-        Branch: e.branch.name,
         Flagged: flags.join(", ") || "No",
         Excluded: e.excluded ? "Yes" : "No",
         "Created At": e.createdAt.toISOString(),
       };
-    });
+    };
+
+    // One sheet per branch so Excel opens with a tab for each showroom
+    const byBranch = new Map<string, typeof entries>();
+    for (const e of entries) {
+      const list = byBranch.get(e.branch.name);
+      if (list) list.push(e);
+      else byBranch.set(e.branch.name, [e]);
+    }
 
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "Entries");
+    const usedNames = new Set<string>();
+    if (byBranch.size === 0) {
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([]), "Entries");
+    } else {
+      for (const [branchName, branchEntries] of byBranch) {
+        // Excel sheet names: max 31 chars, no \ / ? * [ ]
+        let sheet = branchName.replace(/[\\/?*[\]]/g, "").slice(0, 31) || "Branch";
+        if (usedNames.has(sheet)) {
+          let i = 2;
+          while (usedNames.has(`${sheet.slice(0, 28)} ${i}`)) i++;
+          sheet = `${sheet.slice(0, 28)} ${i}`;
+        }
+        usedNames.add(sheet);
+        XLSX.utils.book_append_sheet(
+          wb,
+          XLSX.utils.json_to_sheet(branchEntries.map(toRow)),
+          sheet
+        );
+      }
+    }
     const buf = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
 
     return new NextResponse(buf, {
