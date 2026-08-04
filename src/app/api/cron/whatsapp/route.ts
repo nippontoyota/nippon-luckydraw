@@ -41,16 +41,14 @@ export async function GET(request: Request) {
         const entry = entryMap.get(log.entryId);
         if (!entry) throw new Error("Associated entry not found");
 
-        // Entry registration confirmation
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-        const variables = {
-          name: entry.name,
-          branchName: entry.branch.name,
-          vehicle: `${entry.model.name} (${entry.colour.name})`,
-            vin: entry.vin,
-            confirmationUrl: `${appUrl}/confirmation/${entry.id}`,
-          };
-          await sendWhatsAppMessage(entry.phone, DOUBLETICK_CONFIRM_TEMPLATE, variables);
+        await sendWhatsAppMessage(entry.phone, DOUBLETICK_CONFIRM_TEMPLATE, [
+          entry.name,
+          entry.branch.name,
+          `${entry.model.name} (${entry.colour.name})`,
+          entry.vin,
+          `${appUrl}/confirmation/${entry.id}`,
+        ]);
 
         await prisma.whatsAppLog.update({
           where: { id: log.id },

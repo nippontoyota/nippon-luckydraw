@@ -81,13 +81,13 @@ export async function submitEntry(data: EntryInput) {
       });
       try {
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-        await sendWhatsAppMessage(normalizedPhone, DOUBLETICK_CONFIRM_TEMPLATE, {
+        await sendWhatsAppMessage(normalizedPhone, DOUBLETICK_CONFIRM_TEMPLATE, [
           name,
-          branchName: branch.name,
-          vehicle: `${model.name} (${colour.name})`,
+          branch.name,
+          `${model.name} (${colour.name})`,
           vin,
-          confirmationUrl: `${appUrl}/confirmation/${entry.id}`,
-        });
+          `${appUrl}/confirmation/${entry.id}`,
+        ]);
         await prisma.whatsAppLog.update({
           where: { id: log.id },
           data: { status: "SENT", error: null },
