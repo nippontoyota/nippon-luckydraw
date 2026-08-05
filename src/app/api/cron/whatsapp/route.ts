@@ -39,7 +39,18 @@ export async function GET(request: Request) {
     for (const log of messagesToProcess) {
       try {
         const entry = entryMap.get(log.entryId);
-        if (!entry) throw new Error("Associated entry not found");
+        if (!entry) {
+          await prisma.whatsAppLog.update({
+            where: { id: log.id },
+            data: {
+              status: "FAILED",
+              error: "Associated entry not found",
+              retries: { increment: 1 },
+            },
+          });
+          failCount++;
+          continue;
+        }
 
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
         await sendWhatsAppMessage(entry.phone, DOUBLETICK_CONFIRM_TEMPLATE, [

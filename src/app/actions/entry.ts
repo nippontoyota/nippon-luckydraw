@@ -1,12 +1,24 @@
 "use server";
 
-import { after } from "next/server";
 import { entrySchema, type EntryInput } from "@/schemas/entry";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { assessEntrySync, assessEntryDb } from "@/lib/fraud";
-import { sendWhatsAppMessage, DOUBLETICK_CONFIRM_TEMPLATE } from "@/lib/doubletick";
+
+async function triggerWhatsAppCron() {
+  try {
+    const { GET } = await import("@/app/api/cron/whatsapp/route");
+    const req = new Request("http://localhost/api/cron/whatsapp", {
+      headers: {
+        authorization: `Bearer ${process.env.CRON_SECRET || "local_dev_cron_secret"}`,
+      },
+    });
+    await GET(req);
+  } catch (e) {
+    console.error("Failed to trigger WhatsApp cron:", e);
+  }
+}
 
 export async function submitEntry(data: EntryInput) {
   const reqHeaders = await headers();
@@ -57,7 +69,6 @@ export async function submitEntry(data: EntryInput) {
 
     const fraudFlags = [...syncFlags, ...dbFlags];
 
-    // Single write on the critical path — WhatsApp log + send happen after response
     const entry = await prisma.entry.create({
       data: {
         name,
@@ -74,38 +85,13 @@ export async function submitEntry(data: EntryInput) {
       select: { id: true },
     });
 
-    after(async () => {
-      const log = await prisma.whatsAppLog.create({
-        data: { status: "PENDING", entryId: entry.id },
-        select: { id: true },
-      });
-      try {
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-        await sendWhatsAppMessage(normalizedPhone, DOUBLETICK_CONFIRM_TEMPLATE, [
-          name,
-          branch.name,
-          `${model.name} (${colour.name})`,
-          vin,
-          `${appUrl}/confirmation/${entry.id}`,
-        ]);
-        await prisma.whatsAppLog.update({
-          where: { id: log.id },
-          data: { status: "SENT", error: null },
-        });
-      } catch (e) {
-        console.error("Failed to send WhatsApp confirmation:", e);
-        await prisma.whatsAppLog
-          .update({
-            where: { id: log.id },
-            data: {
-              status: "FAILED",
-              error: e instanceof Error ? e.message : "Unknown error",
-              retries: { increment: 1 },
-            },
-          })
-          .catch(() => {});
-      }
+    // Log synchronously so a dropped background task still leaves a retryable record
+    await prisma.whatsAppLog.create({
+      data: { status: "PENDING", entryId: entry.id },
     });
+
+    // Await cron inline — Vercel can kill after() callbacks before WhatsApp sends
+    await triggerWhatsAppCron();
 
     return { id: entry.id };
   } catch (error) {
@@ -118,7 +104,6 @@ export async function deleteEntry(id: string) {
   try {
     await prisma.$transaction([
       prisma.winner.deleteMany({ where: { entryId: id } }),
-      prisma.whatsAppLog.deleteMany({ where: { entryId: id } }),
       prisma.entry.delete({ where: { id } }),
     ]);
 
