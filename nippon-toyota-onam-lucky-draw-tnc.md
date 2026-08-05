@@ -70,9 +70,9 @@
 
 - Original vehicle delivery invoice Receipt / Insurance copy / RC copy
 - Self-attested copy of a valid government-issued photo ID (Aadhaar, Voter ID, Passport, or Driving License)
-- PAN Card (if prize value exceeds ₹10,000)
+- PAN Card (mandatory)
 
-7.3 **Tax Deducted at Source (TDS):** As per Section 194B of the Income Tax Act, 1961, if the prize value exceeds ₹10,000, the winner will be liable to pay TDS at **30% of the prize value** (or at the prevailing rate at the time of claim) directly to Nippon Toyota. A TDS certificate will be issued accordingly. Winners without a PAN Card may submit **Form 60**, but will not be eligible for a TDS refund.
+7.3 **Tax Deducted at Source (TDS):** As per Section 194B of the Income Tax Act, 1961, if the prize value exceeds ₹10,000, the winner will be liable to pay TDS of the prize value at the prevailing rate at the time of claim directly to Nippon Toyota. A TDS certificate will be issued accordingly.
 
 7.4 Any applicable taxes, levies, or charges on the prize shall be borne solely by the winner.
 
