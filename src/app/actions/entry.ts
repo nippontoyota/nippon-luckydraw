@@ -5,19 +5,13 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { assessEntrySync, assessEntryDb } from "@/lib/fraud";
+import { sendWhatsAppMessage, DOUBLETICK_CONFIRM_TEMPLATE } from "@/lib/doubletick";
 
-async function triggerWhatsAppCron() {
-  try {
-    const { GET } = await import("@/app/api/cron/whatsapp/route");
-    const req = new Request("http://localhost/api/cron/whatsapp", {
-      headers: {
-        authorization: `Bearer ${process.env.CRON_SECRET || "local_dev_cron_secret"}`,
-      },
-    });
-    await GET(req);
-  } catch (e) {
-    console.error("Failed to trigger WhatsApp cron:", e);
-  }
+function getAppUrl() {
+  return (
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+  );
 }
 
 export async function submitEntry(data: EntryInput) {
@@ -85,13 +79,36 @@ export async function submitEntry(data: EntryInput) {
       select: { id: true },
     });
 
-    // Log synchronously so a dropped background task still leaves a retryable record
-    await prisma.whatsAppLog.create({
+    const log = await prisma.whatsAppLog.create({
       data: { status: "PENDING", entryId: entry.id },
+      select: { id: true },
     });
 
-    // Await cron inline — Vercel can kill after() callbacks before WhatsApp sends
-    await triggerWhatsAppCron();
+    const appUrl = getAppUrl();
+    try {
+      await sendWhatsAppMessage(normalizedPhone, DOUBLETICK_CONFIRM_TEMPLATE, [
+        name,
+        branch.name,
+        `${model.name} (${colour.name})`,
+        vin,
+        `${appUrl}/confirmation/${entry.id}`,
+      ]);
+      await prisma.whatsAppLog.update({
+        where: { id: log.id },
+        data: { status: "SENT", error: null },
+      });
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Unknown error";
+      console.error("Failed to send WhatsApp confirmation:", message);
+      await prisma.whatsAppLog.update({
+        where: { id: log.id },
+        data: {
+          status: "FAILED",
+          error: message,
+          retries: { increment: 1 },
+        },
+      });
+    }
 
     return { id: entry.id };
   } catch (error) {

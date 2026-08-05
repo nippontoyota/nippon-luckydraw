@@ -19,6 +19,7 @@ export async function GET(request: Request) {
           { status: "FAILED", retries: { lt: 3 } },
         ],
       },
+      orderBy: { createdAt: "asc" },
       take: 20,
     });
 
@@ -52,7 +53,9 @@ export async function GET(request: Request) {
           continue;
         }
 
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const appUrl =
+          process.env.NEXT_PUBLIC_APP_URL ||
+          (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
         await sendWhatsAppMessage(entry.phone, DOUBLETICK_CONFIRM_TEMPLATE, [
           entry.name,
           entry.branch.name,
