@@ -63,10 +63,10 @@ export function BranchDrawCard({ branch, winners }: BranchDrawCardProps) {
   };
 
   return (
-    <Card className="w-full min-w-0 overflow-hidden border-gray-200 shadow-sm">
-      <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 space-y-0 pb-4">
+    <Card className="w-full min-w-0 overflow-hidden border-gray-200/80 shadow-sm">
+      <CardHeader className="flex flex-col gap-3 space-y-0 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <CardTitle className="text-lg font-semibold truncate">{branch.name}</CardTitle>
+          <CardTitle className="truncate text-lg font-semibold">{branch.name}</CardTitle>
           {branch.location ? (
             <CardDescription className="truncate">{branch.location}</CardDescription>
           ) : (
@@ -78,7 +78,7 @@ export function BranchDrawCard({ branch, winners }: BranchDrawCardProps) {
           <Button
             onClick={() => handleDraw()}
             disabled={isPending}
-            className="shrink-0 w-full sm:w-auto"
+            className="w-full shrink-0 sm:w-auto"
             size="lg"
           >
             {isPending ? (

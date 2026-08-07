@@ -23,10 +23,10 @@ export function ExcludeEntryButton({ id, excluded }: { id: string; excluded: boo
       onClick={handleToggle}
       disabled={isPending}
       title={isExcluded ? "Put back in the draw" : "Remove from the draw"}
-      className={`inline-flex items-center gap-1 px-2 py-1.5 rounded-md text-[11px] font-semibold transition-colors disabled:opacity-50 min-h-8 ${
+      className={`inline-flex min-h-8 items-center gap-1 rounded-md px-2 py-1.5 text-[11px] font-semibold transition-[background-color,color,border-color,transform] duration-150 ease-out active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/15 disabled:opacity-50 ${
         isExcluded
-          ? "bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100"
-          : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:text-gray-900"
+          ? "border border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100"
+          : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900"
       }`}
     >
       {isExcluded ? (
