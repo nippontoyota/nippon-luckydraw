@@ -10,10 +10,10 @@ export default async function ModelsPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="min-w-0">
         <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Models & colours</h1>
-        <p className="text-sm text-gray-600 mt-1 max-w-xl">
+        <p className="mt-1 max-w-xl text-sm text-gray-600">
           These options appear on the customer entry form. Expand a model to manage its colours.
         </p>
       </div>

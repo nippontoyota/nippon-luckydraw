@@ -43,20 +43,20 @@ export default async function AdminDashboardPage() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+    <div className="space-y-5">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
         <div className="min-w-0">
           <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Draw Winners</h1>
-          <p className="text-sm text-gray-600 mt-1 max-w-xl">
+          <p className="mt-1 max-w-xl text-sm text-gray-600">
             Draw 1st, 2nd, and 3rd place for each branch. Only active (non-excluded) entries are eligible.
           </p>
         </div>
         {winners.length > 0 && (
           <a
             href="/api/export?type=winners"
-            className="inline-flex items-center justify-center gap-2 h-9 px-3.5 rounded-lg text-sm font-medium bg-white text-gray-800 hover:bg-gray-50 border border-gray-200 transition-colors shrink-0"
+            className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-3.5 text-sm font-medium text-gray-800 transition-[background-color,transform] duration-150 ease-out hover:bg-gray-50 active:scale-[0.97]"
           >
-            <Download className="w-4 h-4" />
+            <Download className="h-4 w-4" />
             Export winners
           </a>
         )}
@@ -64,14 +64,14 @@ export default async function AdminDashboardPage() {
 
       {branches.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-14 text-center">
-          <Trophy className="mx-auto h-8 w-8 text-gray-300 mb-3" />
+          <Trophy className="mx-auto mb-3 h-8 w-8 text-gray-300" />
           <p className="text-sm font-medium text-gray-900">No branches yet</p>
-          <p className="text-sm text-gray-600 mt-1 max-w-sm mx-auto">
+          <p className="mx-auto mt-1 max-w-sm text-sm text-gray-600">
             Create a branch first, then run the draw once entries come in.
           </p>
           <Link
             href="/admin/dashboard/branches"
-            className="inline-flex mt-4 h-9 items-center px-3.5 rounded-lg text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+            className="mt-4 inline-flex h-9 items-center rounded-lg bg-gray-900 px-3.5 text-sm font-medium text-white transition-[background-color,transform] duration-150 ease-out hover:bg-gray-800 active:scale-[0.97]"
           >
             Go to Branches
           </Link>
